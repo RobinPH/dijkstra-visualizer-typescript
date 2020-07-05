@@ -1,5 +1,6 @@
 import { Node } from "../Component/Node";
 import { Drawable } from "../Component/Drawable";
+import { Line } from "../Component/Line";
 
 export class DrawHandler {
   private context: CanvasRenderingContext2D;
@@ -11,6 +12,8 @@ export class DrawHandler {
   draw(component: Drawable) {
     if (component instanceof Node) {
       this.drawNode(component);
+    } else if (component instanceof Line) {
+      this.drawLine(component);
     }
   }
 
@@ -20,7 +23,15 @@ export class DrawHandler {
 
     this.context.beginPath();
     this.context.arc(x, y, radius, 0, 2 * Math.PI, false);
-    this.context.fillStyle = node.isHighlighted() ? 'green' : 'red';
+
+    if (node.isHighlighted()) {
+      this.context.fillStyle = "green";
+    } else if (node.isClicked()) {
+      this.context.fillStyle = "blue";
+    } else {
+      this.context.fillStyle = "red";
+    }
+
     this.context.fill();
     this.context.lineWidth = 2;
     this.context.strokeStyle = '#003300';
@@ -30,13 +41,20 @@ export class DrawHandler {
     // this.context.stroke();
   }
 
-  drawLine(n1: Node, n2: Node) {
+  drawLine(line: Line) {
     this.context.beginPath();
 
-    const { x: x1, y: y1 } = n1.getPosition();
-    const { x: x2, y: y2} = n2.getPosition();
+    const { origin, destination } = line.nodes;
+
+    const { x: x1, y: y1 } = origin.getPosition();
+    const { x: x2, y: y2} = destination.getPosition();
+    const midX = (x2 + x1) / 2;
+    const midY = (y2 + y1) / 2;
     this.context.moveTo(x1, y1);
     this.context.lineTo(x2, y2);
     this.context.stroke();   
+
+    this.context.font = '32px serif';
+    this.context.strokeText(line.getWeight().toString(), midX, midY);
   }
 }

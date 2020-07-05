@@ -1,36 +1,18 @@
 import { Drawable } from "./Drawable";
 
 export class Node extends Drawable {
-  private x: number;
-  private y: number;
-  private name: string;
-  private childerns: Node[];
+  private childerns: Map<Node, number>;
 
   constructor(x: number, y: number, name: string) {
-    super();
-    this.x = x;
-    this.y = y;
-    this.name = name;
-    this.childerns = new Array();
+    super(x, y, name);
+    this.childerns = new Map();
   }
 
-  addChildren(children: Node) {
-    this.childerns.push(children);
+  addChildren(children: Node, weight: number) {
+    this.childerns.set(children, weight);
   }
 
   getChildrens() {
     return this.childerns;
-  }
-
-  getPosition() {
-    return {
-      x: this.x,
-      y: this.y,
-    }
-  }
-
-  changePosition(x: number, y: number) {
-    this.x = x;
-    this.y = y;
   }
 }

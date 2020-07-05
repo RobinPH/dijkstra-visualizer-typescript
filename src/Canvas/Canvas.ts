@@ -1,6 +1,7 @@
 import { DrawHandler } from "../Handler/Draw";
 import { Drawable } from "../Component/Drawable";
 import { Node } from "../Component/Node";
+import { Line } from "../Component/Line";
 
 export class Canvas {
   private canvas: HTMLCanvasElement;
@@ -24,12 +25,6 @@ export class Canvas {
   draw(components: Drawable[]) {
     let highlighted: Drawable | null = null;
     this.drawBackground();
-    
-    components.forEach((component) => {
-      (component as Node).getChildrens().forEach((children) => {
-        this.drawHandler.drawLine((component as Node), children);
-      })
-    });
 
     components.forEach((component) => {
       if (component.isHighlighted()) {
