@@ -1,5 +1,5 @@
 import { DrawHandler } from "../Handler/Draw";
-import { Drawable } from "../Component/Drawable";
+import { Component } from "../Component/Component";
 import { Node } from "../Component/Node";
 import { Line } from "../Component/Line";
 
@@ -22,8 +22,8 @@ export class Canvas {
     this.canvas.height = 500;
   }
 
-  draw(components: Drawable[]) {
-    let highlighted: Drawable | null = null;
+  draw(components: Component[]) {
+    let highlighted: Component | null = null;
     this.drawBackground();
 
     components.forEach((component) => {

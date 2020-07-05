@@ -1,6 +1,6 @@
 import { Canvas } from "./Canvas/Canvas";
 import { Node } from "./Component/Node";
-import { Drawable } from "./Component/Drawable";
+import { Component } from "./Component/Component";
 import { Line } from "./Component/Line";
 
 enum EditMode {
@@ -12,8 +12,8 @@ export class Visualizer {
   private nodes: Node[];
   private lines: Line[];
   private canvas: Canvas;
-  private highlightedDrawable: Drawable | null = null;
-  private clickedComponent: Drawable | null = null;
+  private highlightedComponent: Component | null = null;
+  private clickedComponent: Component | null = null;
   private mouseDown: Boolean = false;
   private editMode: EditMode = EditMode.DRAG;
 
@@ -59,16 +59,16 @@ export class Visualizer {
     return [...this.lines, ...this.nodes];
   }
 
-  highlightComponent(component: Drawable) {
-    if (this.highlightedDrawable == null) {
-      this.highlightedDrawable = component;
-      this.highlightedDrawable.highlight(true);
+  highlightComponent(component: Component) {
+    if (this.highlightedComponent == null) {
+      this.highlightedComponent = component;
+      this.highlightedComponent.highlight(true);
     }
   }
 
-  checkIfHoveringOnComponent(mouseX: number, mouseY: number, components: Drawable[]) {
-    const hoveringOn: Drawable[] = new Array();
-    const notHoveringOn: Drawable[] = new Array();
+  checkIfHoveringOnComponent(mouseX: number, mouseY: number, components: Component[]) {
+    const hoveringOn: Component[] = new Array();
+    const notHoveringOn: Component[] = new Array();
 
     for (const component of components) {
       if (component instanceof Node) {
@@ -97,7 +97,7 @@ export class Visualizer {
         this.highlightComponent(component)
       })
       notHoveringOn.forEach((component) => { 
-        if (component == this.highlightedDrawable) this.highlightedDrawable = null;
+        if (component == this.highlightedComponent) this.highlightedComponent = null;
         component.highlight(false);
       });
 
@@ -108,8 +108,8 @@ export class Visualizer {
   componentDragHandler() {
     document.addEventListener("mousemove", (event) => {
       if (this.mouseDown
-          && this.highlightedDrawable == this.clickedComponent
-          && this.highlightedDrawable != null
+          && this.highlightedComponent == this.clickedComponent
+          && this.highlightedComponent != null
           && this.clickedComponent != null) {
         this.clickedComponent!.changePosition(event.x, event.y);
         this.clickedComponent!.highlight(true);
@@ -125,7 +125,7 @@ export class Visualizer {
     document.addEventListener("mousedown", (event) => {
       this.mouseDown = true;
       if (this.clickedComponent != null) this.clickedComponent.click(false);
-      this.clickedComponent = this.highlightedDrawable;
+      this.clickedComponent = this.highlightedComponent;
       if (this.clickedComponent != null) this.clickedComponent!.click(true);
     });
   }

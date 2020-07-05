@@ -1,7 +1,7 @@
-import { Drawable } from "./Drawable";
+import { Component } from "./Component";
 import { Node } from "./Node";
 
-export class Line extends Drawable {
+export class Line extends Component {
   private origin: Node;
   private destination: Node;
   private weight: number;

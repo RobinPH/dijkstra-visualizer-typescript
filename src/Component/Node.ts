@@ -1,6 +1,6 @@
-import { Drawable } from "./Drawable";
+import { Component } from "./Component";
 
-export class Node extends Drawable {
+export class Node extends Component {
   private childerns: Map<Node, number>;
 
   constructor(x: number, y: number, name: string) {

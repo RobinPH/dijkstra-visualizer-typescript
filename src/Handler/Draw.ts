@@ -1,5 +1,5 @@
 import { Node } from "../Component/Node";
-import { Drawable } from "../Component/Drawable";
+import { Component } from "../Component/Component";
 import { Line } from "../Component/Line";
 
 export class DrawHandler {
@@ -9,7 +9,7 @@ export class DrawHandler {
     this.context = context;
   }
 
-  draw(component: Drawable) {
+  draw(component: Component) {
     if (component instanceof Node) {
       this.drawNode(component);
     } else if (component instanceof Line) {

@@ -1,8 +1,6 @@
 import { Node } from "./Node";
 
-export type drawable = Node;
-
-export class Drawable {
+export class Component {
   private x: number;
   private y: number;
   private name: string;
