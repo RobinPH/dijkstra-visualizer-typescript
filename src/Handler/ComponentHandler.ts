@@ -29,12 +29,38 @@ export class ComponentHandler {
       if (component instanceof Node) {
         const { x, y } = component.getPosition();
         if (Math.hypot(x - mouseX, y - mouseY) < 26) {
-          hoveringOn.push(component)
+          hoveringOn.push(component);
         } else {
-          notHoveringOn.push(component)
+          notHoveringOn.push(component);
         }
-      } else if (component instanceof Line) {
-        notHoveringOn.push(component)
+      } else if (component instanceof Line) { 
+        const { origin, destination } = component.nodes;
+        const { x: oX, y: oY } = origin.getPosition();
+        const { x: dX, y: dY } = destination.getPosition();
+        const xMin = Math.min(oX, dX);
+        const xMax = Math.max(oX, dX);
+        const yMin = Math.min(oY, dY);
+        const yMax = Math.max(oY, dY);
+
+        if (mouseX < xMin && mouseX > xMax && mouseY < yMin && mouseY > yMax) {
+          notHoveringOn.push(component);
+          continue;
+        }
+
+
+        const yDif = oY + (oX - mouseX) / (oX - dX) * (dY - oY) - mouseY;
+        const xDif = oX + (oY - mouseY) / (oY - dY) * (dX - oX) - mouseX;
+        const xConstraint1 = Math.min(oX, dX) + (Math.abs(xMin - xMax) < 52 ? -26 : 26) // 52 = Node's Diameter, 26 = Node's radius
+        const xConstraint2 = Math.max(oX, dX) + (Math.abs(xMin - xMax) < 52 ? 26 : -26)
+        const yConstraint1 = Math.min(oY, dY) + (Math.abs(yMin - yMax) < 52 ? -26 : 26)
+        const yConstraint2 = Math.max(oY, dY) + (Math.abs(yMin - yMax) < 52 ? 26 : -26)
+        if ((Math.abs(xDif) < 10 * Math.sqrt(2) || Math.abs(yDif) < 10 * Math.sqrt(2)) 
+            && mouseX > xConstraint1 && mouseX < xConstraint2
+            && mouseY > yConstraint1 && mouseY < yConstraint2) {
+          hoveringOn.push(component);
+        } else {
+          notHoveringOn.push(component);
+        }
       }
     }
 
@@ -46,12 +72,13 @@ export class ComponentHandler {
 
   highlightHandler() {
     document.addEventListener("mousemove", (event) => {
-      const { hoveringOn, notHoveringOn } = this.checkIfHoveringOnComponent(event.x, event.y, this.visualizer.components);
+      const { hoveringOn, notHoveringOn } = this.checkIfHoveringOnComponent(event.x, event.y, this.visualizer.components.reverse());
 
       hoveringOn.forEach((component) => { 
-        this.highlightComponent(component)
+        if (this.visualizer.highlightedComponent == null)
+          this.highlightComponent(component)
       })
-      notHoveringOn.forEach((component) => { 
+      notHoveringOn.forEach((component) => {
         if (component == this.visualizer.highlightedComponent) this.visualizer.highlightedComponent = null;
         component.highlight(false);
       });
@@ -82,6 +109,8 @@ export class ComponentHandler {
       if (this.visualizer.clickedComponent != null) this.visualizer.clickedComponent.click(false);
       this.visualizer.clickedComponent = this.visualizer.highlightedComponent;
       if (this.visualizer.clickedComponent != null) this.visualizer.clickedComponent!.click(true);
+
+      this.visualizer.draw();
     });
   }
 }

@@ -24,10 +24,10 @@ export class DrawHandler {
     this.context.beginPath();
     this.context.arc(x, y, radius, 0, 2 * Math.PI, false);
 
-    if (node.isHighlighted()) {
-      this.context.fillStyle = "green";
-    } else if (node.isClicked()) {
+    if (node.isClicked()) {
       this.context.fillStyle = "blue";
+    } else if (node.isHighlighted()) {
+      this.context.fillStyle = "green";
     } else {
       this.context.fillStyle = "red";
     }
@@ -52,6 +52,15 @@ export class DrawHandler {
     const midY = (y2 + y1) / 2;
     this.context.moveTo(x1, y1);
     this.context.lineTo(x2, y2);
+
+    if (line.isClicked()) {
+      this.context.strokeStyle = "blue";
+    } else if (line.isHighlighted()) {
+      this.context.strokeStyle = "green";
+    } else {
+      this.context.strokeStyle = "black";
+    }
+
     this.context.stroke();   
 
     this.context.font = '32px serif';

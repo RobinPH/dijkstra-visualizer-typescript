@@ -27,7 +27,7 @@ export class Canvas {
     this.drawBackground();
 
     components.forEach((component) => {
-      if (component.isHighlighted()) {
+      if (component.isHighlighted() && component instanceof Node) {
         highlighted = component
         return;
       }
