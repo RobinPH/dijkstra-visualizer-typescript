@@ -1,6 +1,6 @@
 import { Node } from "./Node";
 
-export class Component {
+export abstract class Component {
   private x: number;
   private y: number;
   private name: string;

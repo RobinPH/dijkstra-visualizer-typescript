@@ -28,13 +28,14 @@ export class ComponentHandler {
     for (const component of components) {
       if (component instanceof Node) {
         const { x, y } = component.getPosition();
-        if (Math.hypot(x - mouseX, y - mouseY) < 26) {
+        if (Math.hypot(x - mouseX, y - mouseY) < component.radius) {
           hoveringOn.push(component);
         } else {
           notHoveringOn.push(component);
         }
-      } else if (component instanceof Line) { 
+      } else if (component instanceof Line) {
         const { origin, destination } = component.nodes;
+        const radius = Math.min(origin.radius, destination.radius);
         const { x: oX, y: oY } = origin.getPosition();
         const { x: dX, y: dY } = destination.getPosition();
         const xMin = Math.min(oX, dX);
@@ -47,13 +48,12 @@ export class ComponentHandler {
           continue;
         }
 
-
         const yDif = oY + (oX - mouseX) / (oX - dX) * (dY - oY) - mouseY;
         const xDif = oX + (oY - mouseY) / (oY - dY) * (dX - oX) - mouseX;
-        const xConstraint1 = Math.min(oX, dX) + (Math.abs(xMin - xMax) < 52 ? -26 : 26) // 52 = Node's Diameter, 26 = Node's radius
-        const xConstraint2 = Math.max(oX, dX) + (Math.abs(xMin - xMax) < 52 ? 26 : -26)
-        const yConstraint1 = Math.min(oY, dY) + (Math.abs(yMin - yMax) < 52 ? -26 : 26)
-        const yConstraint2 = Math.max(oY, dY) + (Math.abs(yMin - yMax) < 52 ? 26 : -26)
+        const xConstraint1 = Math.min(oX, dX) + (Math.abs(xMin - xMax) < radius * 2 ? -radius : radius) // 52 = Node's Diameter, 26 = Node's radius
+        const xConstraint2 = Math.max(oX, dX) + (Math.abs(xMin - xMax) < radius * 2 ? radius : -radius)
+        const yConstraint1 = Math.min(oY, dY) + (Math.abs(yMin - yMax) < radius * 2 ? -radius : radius)
+        const yConstraint2 = Math.max(oY, dY) + (Math.abs(yMin - yMax) < radius * 2 ? radius : -radius)
         if ((Math.abs(xDif) < 10 * Math.sqrt(2) || Math.abs(yDif) < 10 * Math.sqrt(2)) 
             && mouseX > xConstraint1 && mouseX < xConstraint2
             && mouseY > yConstraint1 && mouseY < yConstraint2) {
@@ -71,7 +71,7 @@ export class ComponentHandler {
   }
 
   highlightHandler() {
-    document.addEventListener("mousemove", (event) => {
+    this.visualizer.canvasDocument.addEventListener("mousemove", (event) => {
       const { hoveringOn, notHoveringOn } = this.checkIfHoveringOnComponent(event.x, event.y, this.visualizer.components.reverse());
 
       hoveringOn.forEach((component) => { 
@@ -88,7 +88,7 @@ export class ComponentHandler {
   }
 
   dragHandler() {
-    document.addEventListener("mousemove", (event) => {
+    this.visualizer.canvasDocument.addEventListener("mousemove", (event) => {
       if (this.visualizer.mouseDown
           && this.visualizer.highlightedComponent != null) {
           for (const clickedComponent of this.visualizer.clickedComponents) {
@@ -102,11 +102,11 @@ export class ComponentHandler {
   }
 
   clickHandler() {
-    document.addEventListener("mouseup", (event) => {
+    this.visualizer.canvasDocument.addEventListener("mouseup", () => {
       this.visualizer.mouseDown = false;
     })
 
-    document.addEventListener("mousedown", (event) => {
+    this.visualizer.canvasDocument.addEventListener("mousedown", () => {
       this.visualizer.mouseDown = true;
       const highlighted = this.visualizer.highlightedComponent;
       const clickedComponents = this.visualizer.clickedComponents;

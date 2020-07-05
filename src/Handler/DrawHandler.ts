@@ -1,12 +1,15 @@
 import { Node } from "../Component/Node";
 import { Component } from "../Component/Component";
 import { Line } from "../Component/Line";
+import { Canvas } from "../Canvas/Canvas";
 
 export class DrawHandler {
+  private canvas: Canvas;
   private context: CanvasRenderingContext2D;
 
-  constructor(context: CanvasRenderingContext2D) {
-    this.context = context;
+  constructor(canvas: Canvas) {
+    this.canvas = canvas;
+    this.context = this.canvas.context;
   }
 
   draw(component: Component) {
@@ -19,10 +22,9 @@ export class DrawHandler {
 
   drawNode(node: Node) {
     const { x, y } = node.getPosition();
-    const radius = 26;
 
     this.context.beginPath();
-    this.context.arc(x, y, radius, 0, 2 * Math.PI, false);
+    this.context.arc(x, y, node.radius, 0, 2 * Math.PI, false);
 
     if (node.isClicked()) {
       this.context.fillStyle = "blue";
@@ -37,15 +39,18 @@ export class DrawHandler {
     this.context.strokeStyle = '#003300';
     this.context.stroke();
 
-    // this.context.rect(x - radius, y - radius, radius * 2, radius * 2)
-    // this.context.stroke();
+    this.context.lineWidth = 1;
+    this.context.font = '16px serif';
+
+    const name = node.getName()
+    const { width: stringWidth, height: stringHeight } = this.stringMetrics(name);
+    this.context.strokeText(name, x - stringWidth / 2, y + stringHeight / 2);
   }
 
   drawLine(line: Line) {
     this.context.beginPath();
 
     const { origin, destination } = line.nodes;
-
     const { x: x1, y: y1 } = origin.getPosition();
     const { x: x2, y: y2} = destination.getPosition();
     const midX = (x2 + x1) / 2;
@@ -60,12 +65,23 @@ export class DrawHandler {
     } else {
       this.context.strokeStyle = "black";
     }
-    
+
     this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 4 : 2;
 
     this.context.stroke();   
 
     this.context.font = '32px serif';
-    this.context.strokeText(line.getWeight().toString(), midX, midY);
+    const weight = line.getWeight().toString();
+    const { width: stringWidth, height: stringHeight } = this.stringMetrics(weight);
+
+    this.context.strokeText(weight, midX - stringWidth / 2, midY + stringHeight / 2);
+  }
+
+  stringMetrics(string: string) {
+    const fontMetrics = this.context.measureText(string);
+    return {
+      width: fontMetrics.actualBoundingBoxRight,
+      height: fontMetrics.actualBoundingBoxAscent + fontMetrics.actualBoundingBoxDescent,
+    }
   }
 }

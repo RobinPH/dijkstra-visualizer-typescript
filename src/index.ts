@@ -1,14 +1,12 @@
 import { Node } from "./Component/Node";
 import { Visualizer } from "./Visualizer";
 
-const canvas = document.querySelector("#canvas")! as HTMLCanvasElement;
-
-const visualizer = new Visualizer(canvas);
-const node1 = new Node(100, 100, "node-1");
-const node2 = new Node(20, 40, "node-2");
-const node3 = new Node(80, 60, "node-3");
-const node4 = new Node(80, 200, "node-4");
-const node5 = new Node(150, 300, "node-5");
+const visualizer = new Visualizer("#canvas");
+const node1 = new Node(100, 100, 26, "AAA");
+const node2 = new Node(20, 40, 54, "B");
+const node3 = new Node(80, 60, 26, "C");
+const node4 = new Node(80, 200, 26, "D");
+const node5 = new Node(150, 300, 26, "E");
 
 visualizer.addNode(node1);
 visualizer.addNode(node2);

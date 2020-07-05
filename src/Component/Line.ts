@@ -16,6 +16,10 @@ export class Line extends Component {
     this.weight = weight;
   }
 
+  setWeight(n: number) {
+    this.weight = n;
+  }
+
   getWeight() {
     return this.weight;
   }

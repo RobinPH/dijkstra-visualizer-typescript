@@ -3,6 +3,8 @@ import { Node } from "./Component/Node";
 import { Component } from "./Component/Component";
 import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
+import { ScaleHandler } from "./Handler/ScaleHandler";
+import { PropertyEditor } from "./Component/PropertyEditor";
 
 export enum EditMode {
   DRAG = "DRAG",
@@ -12,19 +14,24 @@ export enum EditMode {
 export class Visualizer {
   private nodes: Node[];
   private lines: Line[];
-  private canvas: Canvas;
+  private _canvas: Canvas;
+  private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
   private _clickedComponent: Component[] = new Array();
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
+  private propertyEditor: PropertyEditor;
 
-  constructor(canvas: HTMLCanvasElement) {
+  constructor(canvasId: string) {
     this.nodes = new Array();
     this.lines = new Array();
-    this.canvas = new Canvas(canvas);
+    this._canvasDocument = document.querySelector(canvasId) as HTMLCanvasElement;
+    this._canvas = new Canvas(this._canvasDocument);
     this.draw();
 
     new ComponentHandler(this);
+    new ScaleHandler(this);
+    this.propertyEditor = new PropertyEditor("#property-editor", this);
 
     this.editModeSelectionHandler();
   }
@@ -42,22 +49,7 @@ export class Visualizer {
   }
 
   async draw() {
-    this.canvas.draw([...this.lines, ...this.nodes]);
-    // if (this.clickedComponents.length != 0) {
-    //   const paragraph = document.querySelector("#clicked-component") as HTMLParagraphElement;
-    //   paragraph.innerText = '';
-    //   for (const clickedComponent of this.clickedComponents) {
-    //     const { x, y } = clickedComponent.getPosition();
-    //     paragraph.innerText += `\n${ clickedComponent.getName() } `;
-    //     paragraph.innerText += ` x: ${ x } y: ${ y }`;
-    //     if (clickedComponent instanceof Node) {
-    //       paragraph.innerText += ` Children: `;
-    //       clickedComponent.getChildrens().forEach((value, key) => {
-    //         paragraph.innerText += ` ${ key.getName() } `;
-    //       })
-    //     }
-    //   }
-    // }
+    this._canvas.draw([...this.lines, ...this.nodes]);
   }
 
   get highlightedComponent() {
@@ -97,6 +89,7 @@ export class Visualizer {
         this._clickedComponent.shift()?.click(false);
       }
       this._clickedComponent?.push(component);
+      this.propertyEditor.componentEditor();
     }
   }
 
@@ -127,5 +120,13 @@ export class Visualizer {
 
   get editMode() {
     return this._editMode;
+  }
+
+  get canvas() {
+    return this._canvas;
+  }
+
+  get canvasDocument() {
+    return this._canvasDocument;
   }
 }
