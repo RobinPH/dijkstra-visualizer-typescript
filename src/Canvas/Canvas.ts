@@ -1,4 +1,4 @@
-import { DrawHandler } from "../Handler/Draw";
+import { DrawHandler } from "../Handler/DrawHandler";
 import { Component } from "../Component/Component";
 import { Node } from "../Component/Node";
 import { Line } from "../Component/Line";
