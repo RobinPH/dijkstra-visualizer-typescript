@@ -33,7 +33,7 @@ export class DrawHandler {
     }
 
     this.context.fill();
-    this.context.lineWidth = 2;
+    this.context.lineWidth = node.isClicked() || node.isHighlighted() ? 4 : 2;
     this.context.strokeStyle = '#003300';
     this.context.stroke();
 
@@ -60,6 +60,8 @@ export class DrawHandler {
     } else {
       this.context.strokeStyle = "black";
     }
+    
+    this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 4 : 2;
 
     this.context.stroke();   
 
