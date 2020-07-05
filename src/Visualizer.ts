@@ -4,9 +4,9 @@ import { Component } from "./Component/Component";
 import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
 
-enum EditMode {
-  DRAG,
-  CONNECT,
+export enum EditMode {
+  DRAG = "DRAG",
+  CONNECT = "CONNECT",
 }
 
 export class Visualizer {
@@ -16,7 +16,7 @@ export class Visualizer {
   private _highlightedComponent: Component | null = null;
   private _clickedComponent: Component[] = new Array();
   private _mouseDown: Boolean = false;
-  private editMode: EditMode = EditMode.DRAG;
+  private _editMode: EditMode = EditMode.DRAG;
 
   constructor(canvas: HTMLCanvasElement) {
     this.nodes = new Array();
@@ -25,6 +25,8 @@ export class Visualizer {
     this.draw();
 
     new ComponentHandler(this);
+
+    this.editModeSelectionHandler();
   }
 
   addNode(node: Node) {
@@ -70,9 +72,28 @@ export class Visualizer {
     return this._clickedComponent;
   }
 
+  editModeSelectionHandler() {
+    const form = (document.querySelector("#edit-mode-selection") as HTMLFormElement);
+    form.onchange = (event) => {
+      const mode = (event.target as HTMLInputElement).value;
+      switch (mode) {
+        case "drag":
+          this._editMode = EditMode.DRAG;
+          break;
+        case "connect":
+          this._editMode = EditMode.CONNECT;
+          break;
+        default:
+          this._editMode = EditMode.DRAG;
+          break;
+      }
+    };
+  }
+
   addClickedComponent(component: Component) {
     if (component != null) {
-      if (this._clickedComponent.length == 2) {
+      const MAX = (this._editMode == EditMode.DRAG ? 1 : 2);
+      while (this._clickedComponent.length >= MAX) {
         this._clickedComponent.shift()?.click(false);
       }
       this._clickedComponent?.push(component);
@@ -102,5 +123,9 @@ export class Visualizer {
 
   get components() {
     return [...this.lines, ...this.nodes];
+  }
+
+  get editMode() {
+    return this._editMode;
   }
 }

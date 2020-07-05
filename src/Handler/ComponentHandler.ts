@@ -1,4 +1,4 @@
-import { Visualizer } from "../Visualizer";
+import { Visualizer, EditMode } from "../Visualizer";
 import { Component } from "../Component/Component";
 import { Line } from "../Component/Line";
 import { Node } from "../Component/Node";
@@ -117,8 +117,7 @@ export class ComponentHandler {
         } else {
           this.visualizer.addClickedComponent(highlighted);
           highlighted.click(true);
-
-          if (this.visualizer.clickedComponents.length == 2) {
+          if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
             const [component1, component2] = this.visualizer.clickedComponents;
             if (component1 instanceof Node && component2 instanceof Node) {
               this.visualizer.addConnection(component1, component2, 72);
