@@ -6,6 +6,7 @@ export class Visualizer {
   private nodes: Node[];
   private canvas: Canvas;
   private highlightedDrawable: Drawable | null = null;
+  private clickedComponent: Drawable | null = null;
   private mouseDown: Boolean = false;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -39,7 +40,7 @@ export class Visualizer {
           }
         } else {
           if (node == this.highlightedDrawable) this.highlightedDrawable = null;
-          node.highlight(false);
+          if (this.clickedComponent != node) node.highlight(false);
         }
       })
       this.draw();
@@ -49,15 +50,28 @@ export class Visualizer {
   componentDragHandler() {
     document.addEventListener("mousedown", (event) => {
       this.mouseDown = true;
+
+      for (const node of this.nodes) {
+        const { x: eX, y: eY } = event;
+        const { x: nX, y: nY } = node.getPosition();
+
+        if (Math.hypot(nX - eX, nY - eY) < 26) {
+          this.clickedComponent = node;
+          break;
+        }
+      }
     })
 
     document.addEventListener("mouseup", (event) => {
       this.mouseDown = false;
+      this.clickedComponent?.highlight(false);
+      this.clickedComponent = null;
     })
 
     document.addEventListener("mousemove", (event) => {
-      if (this.mouseDown && this.highlightedDrawable != null) {
-        (this.highlightedDrawable as Node).changePosition(event.x, event.y);
+      if (this.mouseDown && this.clickedComponent != null) {
+        (this.clickedComponent as Node).changePosition(event.x, event.y);
+        this.clickedComponent?.highlight(true);
       }
     })
   }
