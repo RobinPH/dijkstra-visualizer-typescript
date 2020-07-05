@@ -14,7 +14,7 @@ export class Visualizer {
   private lines: Line[];
   private canvas: Canvas;
   private _highlightedComponent: Component | null = null;
-  private _clickedComponent: Component | null = null;
+  private _clickedComponent: Component[] = new Array();
   private _mouseDown: Boolean = false;
   private editMode: EditMode = EditMode.DRAG;
 
@@ -32,26 +32,30 @@ export class Visualizer {
     this.draw();
   }
 
-  addConnect(origin: Node, destination: Node, weight: number) {
-    origin.addChildren(destination, weight);
-    this.lines.push(new Line(origin, destination, weight));
+  addConnection(origin: Node, destination: Node, weight: number) {
+    if (origin.hasConnectionTo(destination) == false) {
+      origin.addChildren(destination, weight);
+      this.lines.push(new Line(origin, destination, weight));
+    }
   }
 
   async draw() {
     this.canvas.draw([...this.lines, ...this.nodes]);
-    if (this.clickedComponent != null) {
-      const { x, y } = this.clickedComponent.getPosition();
-      const paragraph = document.querySelector("#clicked-component") as HTMLParagraphElement;
-      paragraph.innerText = '';
-      paragraph.innerText += `${ this.clickedComponent.getName() } `;
-      paragraph.innerText += ` x: ${ x } y: ${ y }`;
-      if (this.clickedComponent instanceof Node) {
-        paragraph.innerText += ` Children: `;
-        this.clickedComponent.getChildrens().forEach((value, key) => {
-          paragraph.innerText += ` ${ key.getName() } `;
-        })
-      }
-    }
+    // if (this.clickedComponents.length != 0) {
+    //   const paragraph = document.querySelector("#clicked-component") as HTMLParagraphElement;
+    //   paragraph.innerText = '';
+    //   for (const clickedComponent of this.clickedComponents) {
+    //     const { x, y } = clickedComponent.getPosition();
+    //     paragraph.innerText += `\n${ clickedComponent.getName() } `;
+    //     paragraph.innerText += ` x: ${ x } y: ${ y }`;
+    //     if (clickedComponent instanceof Node) {
+    //       paragraph.innerText += ` Children: `;
+    //       clickedComponent.getChildrens().forEach((value, key) => {
+    //         paragraph.innerText += ` ${ key.getName() } `;
+    //       })
+    //     }
+    //   }
+    // }
   }
 
   get highlightedComponent() {
@@ -62,12 +66,30 @@ export class Visualizer {
     this._highlightedComponent = component;
   }
 
-  get clickedComponent() {
+  get clickedComponents() {
     return this._clickedComponent;
   }
 
-  set clickedComponent(component: Component | null) {
-    this._clickedComponent = component;
+  addClickedComponent(component: Component) {
+    if (component != null) {
+      if (this._clickedComponent.length == 2) {
+        this._clickedComponent.shift()?.click(false);
+      }
+      this._clickedComponent?.push(component);
+    }
+  }
+
+  removeClickedComponent(component: Component) {
+    const index = this._clickedComponent.indexOf(component);
+
+    if (index != -1) {
+      this._clickedComponent.splice(index, 1);
+      component.click(false);
+    }
+  }
+
+  clearClickedComponents() {
+    this._clickedComponent = new Array();
   }
 
   get mouseDown() {

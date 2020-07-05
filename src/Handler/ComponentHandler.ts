@@ -90,12 +90,14 @@ export class ComponentHandler {
   dragHandler() {
     document.addEventListener("mousemove", (event) => {
       if (this.visualizer.mouseDown
-          && this.visualizer.highlightedComponent == this.visualizer.clickedComponent
-          && this.visualizer.highlightedComponent != null
-          && this.visualizer.clickedComponent != null) {
-        this.visualizer.clickedComponent!.changePosition(event.x, event.y);
-        this.highlightComponent(this.visualizer.clickedComponent);
-      }
+          && this.visualizer.highlightedComponent != null) {
+          for (const clickedComponent of this.visualizer.clickedComponents) {
+            if (this.visualizer.highlightedComponent == clickedComponent) {
+              clickedComponent.changePosition(event.x, event.y);
+              this.highlightComponent(clickedComponent);
+            }
+          }
+        }
     })
   }
 
@@ -106,9 +108,24 @@ export class ComponentHandler {
 
     document.addEventListener("mousedown", (event) => {
       this.visualizer.mouseDown = true;
-      if (this.visualizer.clickedComponent != null) this.visualizer.clickedComponent.click(false);
-      this.visualizer.clickedComponent = this.visualizer.highlightedComponent;
-      if (this.visualizer.clickedComponent != null) this.visualizer.clickedComponent!.click(true);
+      const highlighted = this.visualizer.highlightedComponent;
+      const clickedComponents = this.visualizer.clickedComponents;
+
+      if (highlighted) {
+        if (clickedComponents.includes(highlighted)) {
+          this.visualizer.removeClickedComponent(highlighted);
+        } else {
+          this.visualizer.addClickedComponent(highlighted);
+          highlighted.click(true);
+
+          if (this.visualizer.clickedComponents.length == 2) {
+            const [component1, component2] = this.visualizer.clickedComponents;
+            if (component1 instanceof Node && component2 instanceof Node) {
+              this.visualizer.addConnection(component1, component2, 72);
+            }
+          }
+        }
+      }
 
       this.visualizer.draw();
     });

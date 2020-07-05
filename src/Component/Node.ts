@@ -8,6 +8,10 @@ export class Node extends Component {
     this.childerns = new Map();
   }
 
+  hasConnectionTo(children: Node) {
+    return this.childerns.get(children) != null || children.getChildrens().get(this) != null;
+  }
+
   addChildren(children: Node, weight: number) {
     this.childerns.set(children, weight);
   }
