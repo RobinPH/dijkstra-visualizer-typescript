@@ -90,9 +90,9 @@ export class ComponentHandler {
   dragHandler() {
     this.visualizer.canvasDocument.addEventListener("mousemove", (event) => {
       if (this.visualizer.mouseDown
-          && this.visualizer.highlightedComponent != null) {
+          && this.visualizer.draggingComponent != null) {
           for (const clickedComponent of this.visualizer.clickedComponents) {
-            if (this.visualizer.highlightedComponent == clickedComponent) {
+            if (this.visualizer.draggingComponent == clickedComponent) {
               clickedComponent.position = { x: event.x, y: event.y };
               this.highlightComponent(clickedComponent);
             }
@@ -104,6 +104,7 @@ export class ComponentHandler {
   clickHandler() {
     this.visualizer.canvasDocument.addEventListener("mouseup", () => {
       this.visualizer.mouseDown = false;
+      this.visualizer.draggingComponent = null;
     })
 
     this.visualizer.canvasDocument.addEventListener("mousedown", () => {
@@ -116,6 +117,7 @@ export class ComponentHandler {
           this.visualizer.removeClickedComponent(highlighted);
         } else {
           this.visualizer.addClickedComponent(highlighted);
+          this.visualizer.draggingComponent = highlighted;
           highlighted.click(true);
           if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
             const [component1, component2] = this.visualizer.clickedComponents;

@@ -18,6 +18,7 @@ export class Visualizer {
   private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
   private _clickedComponent: Component[] = new Array();
+  private _draggingComponent: Component | null = null;
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
   private propertyEditor: PropertyEditor;
@@ -58,6 +59,14 @@ export class Visualizer {
 
   set highlightedComponent(component: Component | null) {
     this._highlightedComponent = component;
+  }
+
+  get draggingComponent() {
+    return this._draggingComponent;
+  }
+
+  set draggingComponent(component: Component | null) {
+    this._draggingComponent = component;
   }
 
   get clickedComponents() {

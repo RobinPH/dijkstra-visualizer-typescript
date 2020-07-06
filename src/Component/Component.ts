@@ -1,5 +1,9 @@
 import { Node } from "./Node";
 
+interface IPosition {
+  x: number;
+  y: number;
+}
 export abstract class Component {
   private x: number;
   private y: number;
@@ -28,7 +32,7 @@ export abstract class Component {
     }
   }
 
-  set position({ x, y }: { x: number; y: number }) {
+  set position({ x, y }: IPosition) {
     if (x != null) this.x = x;
     if (y != null) this.y = y;
   }
