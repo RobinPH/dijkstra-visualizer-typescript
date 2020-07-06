@@ -73,11 +73,11 @@ export class ComponentHandler {
   highlightHandler() {
     this.visualizer.canvasDocument.addEventListener("mousemove", (event) => {
       const { hoveringOn, notHoveringOn } = this.checkIfHoveringOnComponent(event.x, event.y, this.visualizer.components.reverse());
-
+      
       hoveringOn.forEach((component) => { 
         if (this.visualizer.highlightedComponent == null)
           this.highlightComponent(component)
-      })
+        })
       notHoveringOn.forEach((component) => {
         if (component == this.visualizer.highlightedComponent) this.visualizer.highlightedComponent = null;
         component.highlight(false);
@@ -110,20 +110,29 @@ export class ComponentHandler {
 
     this.visualizer.canvasDocument.addEventListener("mousedown", () => {
       this.visualizer.mouseDown = true;
-      const highlighted = this.visualizer.highlightedComponent;
+
+      const highlightedComponent = this.visualizer.highlightedComponent;
       const clickedComponents = this.visualizer.clickedComponents;
-      
-      if (highlighted != null) {
-        if (clickedComponents.includes(highlighted)) {
-          this.visualizer.removeClickedComponent(highlighted);
+
+      if (highlightedComponent != null) {
+        if (this.visualizer.editMode == EditMode.DELETE) {
+          if (highlightedComponent instanceof Node) {
+            this.visualizer.removeNode(highlightedComponent);
+          } else if (highlightedComponent instanceof Line) {
+            this.visualizer.removeLine(highlightedComponent)
+          }
         } else {
-          this.visualizer.addClickedComponent(highlighted);
-          this.visualizer.draggingComponent = highlighted;
-          highlighted.click(true);
-          if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
-            const [component1, component2] = this.visualizer.clickedComponents;
-            if (component1 instanceof Node && component2 instanceof Node) {
-              this.visualizer.addConnection(component1, component2, 72);
+          if (clickedComponents.includes(highlightedComponent)) {
+            this.visualizer.removeClickedComponent(highlightedComponent);
+          } else {
+            this.visualizer.addClickedComponent(highlightedComponent);
+            this.visualizer.draggingComponent = highlightedComponent;
+            highlightedComponent.click(true);
+            if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
+              const [component1, component2] = this.visualizer.clickedComponents;
+              if (component1 instanceof Node && component2 instanceof Node) {
+                this.visualizer.addConnection(component1, component2, 72);
+              }
             }
           }
         }

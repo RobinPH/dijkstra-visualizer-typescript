@@ -5,10 +5,12 @@ import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
 import { ScaleHandler } from "./Handler/ScaleHandler";
 import { PropertyEditor } from "./Component/PropertyEditor/Editor";
+import { ToolSelection } from "./Component/ToolSelection";
 
 export enum EditMode {
   DRAG = "DRAG",
   CONNECT = "CONNECT",
+  DELETE = "DELETE",
 }
 
 export class Visualizer {
@@ -23,6 +25,7 @@ export class Visualizer {
   private _editMode: EditMode = EditMode.DRAG;
   private _biggestWeight: number = 0;
   private _propertyEditor: PropertyEditor;
+  private _toolSelection: ToolSelection;
 
   constructor(canvasId: string) {
     this.nodes = new Array();
@@ -34,8 +37,9 @@ export class Visualizer {
     new ComponentHandler(this);
     new ScaleHandler(this);
     this._propertyEditor = new PropertyEditor("#property-editor", this);
+    this._toolSelection = new ToolSelection("#tool-selection", this);
 
-    this.editModeSelectionHandler();
+    this._toolSelection.render();
   }
 
   addNode(node: Node) {
@@ -49,6 +53,7 @@ export class Visualizer {
 
     this._clickedComponent = this._clickedComponent.filter((component) => component != node);
     this._propertyEditor.render();
+    this.highlightedComponent = null;
     this.draw();
   }
 
@@ -77,29 +82,16 @@ export class Visualizer {
 
     this._clickedComponent.shift();
     this._propertyEditor.render();
+    this.highlightedComponent = null;
     this.draw();
+  }
+
+  removeLine({ nodes: { origin, destination } }: Line) {
+    this.removeConnection(origin, destination);
   }
 
   async draw() {
     this._canvas.draw([...this.lines, ...this.nodes]);
-  }
-
-  editModeSelectionHandler() {
-    const form = (document.querySelector("#edit-mode-selection") as HTMLFormElement);
-    form.onchange = (event) => {
-      const mode = (event.target as HTMLInputElement).value;
-      switch (mode) {
-        case "drag":
-          this._editMode = EditMode.DRAG;
-          break;
-        case "connect":
-          this._editMode = EditMode.CONNECT;
-          break;
-        default:
-          this._editMode = EditMode.DRAG;
-          break;
-      }
-    };
   }
 
   addClickedComponent(component: Component) {
@@ -173,6 +165,10 @@ export class Visualizer {
 
   get editMode() {
     return this._editMode;
+  }
+
+  set editMode(editMode: EditMode) {
+    this._editMode = editMode;
   }
 
   get canvas() {
