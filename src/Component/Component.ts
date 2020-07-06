@@ -21,7 +21,7 @@ export abstract class Component {
     return this._name;
   }
 
-  set changeName(name: string) {
+  set name(name: string) {
     this._name = name;
   }
 

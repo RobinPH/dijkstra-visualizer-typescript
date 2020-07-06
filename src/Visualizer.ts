@@ -4,7 +4,7 @@ import { Component } from "./Component/Component";
 import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
 import { ScaleHandler } from "./Handler/ScaleHandler";
-import { PropertyEditor } from "./Component/PropertyEditor";
+import { PropertyEditor } from "./Component/PropertyEditor/Editor";
 
 export enum EditMode {
   DRAG = "DRAG",
@@ -22,7 +22,7 @@ export class Visualizer {
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
   private _biggestWeight: number = 0;
-  private propertyEditor: PropertyEditor;
+  private _propertyEditor: PropertyEditor;
 
   constructor(canvasId: string) {
     this.nodes = new Array();
@@ -33,7 +33,7 @@ export class Visualizer {
 
     new ComponentHandler(this);
     new ScaleHandler(this);
-    this.propertyEditor = new PropertyEditor("#property-editor", this);
+    this._propertyEditor = new PropertyEditor("#property-editor", this);
 
     this.editModeSelectionHandler();
   }
@@ -53,30 +53,6 @@ export class Visualizer {
 
   async draw() {
     this._canvas.draw([...this.lines, ...this.nodes]);
-  }
-
-  get highlightedComponent() {
-    return this._highlightedComponent;
-  }
-
-  set highlightedComponent(component: Component | null) {
-    this._highlightedComponent = component;
-  }
-
-  get draggingComponent() {
-    return this._draggingComponent;
-  }
-
-  set draggingComponent(component: Component | null) {
-    this._draggingComponent = component;
-  }
-
-  get clickedComponents() {
-    return this._clickedComponent;
-  }
-
-  get biggestWeight() {
-    return this._biggestWeight;
   }
 
   editModeSelectionHandler() {
@@ -104,8 +80,8 @@ export class Visualizer {
         this._clickedComponent.shift()?.click(false);
       }
       this._clickedComponent?.push(component);
-      this.propertyEditor.componentEditor();
     }
+    this._propertyEditor.render(this._clickedComponent[0]);
   }
 
   removeClickedComponent(component: Component) {
@@ -115,10 +91,43 @@ export class Visualizer {
       this._clickedComponent.splice(index, 1);
       component.click(false);
     }
+    this._propertyEditor.render(this._clickedComponent[0]);
   }
 
   clearClickedComponents() {
-    this._clickedComponent = new Array();
+    while (this._clickedComponent.length > 0) {
+      this._clickedComponent.pop()?.click(false);
+    }
+    this._propertyEditor.render();
+  }
+
+  updateComponent<T>(component: T, callbackfn: (component: T) => void) {
+    callbackfn(component);
+    this.draw();
+  }
+
+  get highlightedComponent() {
+    return this._highlightedComponent;
+  }
+
+  set highlightedComponent(component: Component | null) {
+    this._highlightedComponent = component;
+  }
+
+  get draggingComponent() {
+    return this._draggingComponent;
+  }
+
+  set draggingComponent(component: Component | null) {
+    this._draggingComponent = component;
+  }
+
+  get clickedComponents() {
+    return this._clickedComponent;
+  }
+
+  get biggestWeight() {
+    return this._biggestWeight;
   }
 
   get mouseDown() {
@@ -143,5 +152,9 @@ export class Visualizer {
 
   get canvasDocument() {
     return this._canvasDocument;
+  }
+
+  get propertyEditor() {
+    return this._propertyEditor;
   }
 }

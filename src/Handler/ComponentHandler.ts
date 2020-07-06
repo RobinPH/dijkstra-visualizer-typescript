@@ -104,6 +104,7 @@ export class ComponentHandler {
   clickHandler() {
     this.visualizer.canvasDocument.addEventListener("mouseup", () => {
       this.visualizer.mouseDown = false;
+      if (this.visualizer.draggingComponent) this.visualizer.propertyEditor.render(this.visualizer.draggingComponent);
       this.visualizer.draggingComponent = null;
     })
 
@@ -111,8 +112,8 @@ export class ComponentHandler {
       this.visualizer.mouseDown = true;
       const highlighted = this.visualizer.highlightedComponent;
       const clickedComponents = this.visualizer.clickedComponents;
-
-      if (highlighted) {
+      
+      if (highlighted != null) {
         if (clickedComponents.includes(highlighted)) {
           this.visualizer.removeClickedComponent(highlighted);
         } else {
@@ -126,6 +127,8 @@ export class ComponentHandler {
             }
           }
         }
+      } else {
+        this.visualizer.clearClickedComponents();
       }
 
       this.visualizer.draw();
