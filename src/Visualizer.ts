@@ -43,12 +43,41 @@ export class Visualizer {
     this.draw();
   }
 
+  removeNode(node: Node) {
+    this.nodes = this.nodes.filter((_node) => _node != node);
+    this.removeConnection(node);
+
+    this._clickedComponent = this._clickedComponent.filter((component) => component != node);
+    this._propertyEditor.render();
+    this.draw();
+  }
+
   addConnection(origin: Node, destination: Node, weight: number) {
     if (origin.hasConnectionTo(destination) == false) {
       origin.addChildren(destination, weight);
       this.lines.push(new Line(origin, destination, weight));
       this._biggestWeight = Math.max(this._biggestWeight, weight);
     }
+  }
+
+  removeConnection(origin: Node, destination?: Node) {
+    this.lines = this.lines.filter((line) => {
+      const lineNodes = line.nodes;
+
+      if (destination != null) {
+        if (lineNodes.origin == origin && lineNodes.destination == destination) return false;
+      } else {
+        if (lineNodes.origin == origin || lineNodes.destination == origin) return false;
+      }
+
+      return true;
+    });
+
+    if (destination) origin.removeChildren(destination);
+
+    this._clickedComponent.shift();
+    this._propertyEditor.render();
+    this.draw();
   }
 
   async draw() {

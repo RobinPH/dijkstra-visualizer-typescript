@@ -18,6 +18,10 @@ export class Node extends Component {
     this._childerns.set(children, weight);
   }
 
+  removeChildren(children: Node) {
+    this.childrens.delete(children);
+  }
+
   get childrens() {
     return this._childerns;
   }

@@ -23,6 +23,7 @@ export class NodeEditor extends React.Component<NodeEditorProps, NodeEditorState
     this.radiusChange = this.radiusChange.bind(this);
     this.xPositionChange = this.xPositionChange.bind(this);
     this.yPositionChange = this.yPositionChange.bind(this);
+    this.deleteNode = this.deleteNode.bind(this);
   }
 
   nameChange(event: React.FormEvent<HTMLInputElement>) {
@@ -81,6 +82,12 @@ export class NodeEditor extends React.Component<NodeEditorProps, NodeEditorState
     });
   }
 
+  deleteNode() {
+    if (this.state.node) {
+      this.props.visualizer.removeNode(this.state.node);
+    }
+  }
+
   static getDerivedStateFromProps(nextProps: NodeEditorProps, prevState: NodeEditorState) {
     return nextProps.node !== prevState.node ? {
       node: nextProps.node,
@@ -99,7 +106,7 @@ export class NodeEditor extends React.Component<NodeEditorProps, NodeEditorState
           <input type="text" onChange={ this.xPositionChange } id="node-position-x" name="position-x" value={ x }></input>
           <label>y</label>
           <input type="text" onChange={ this.yPositionChange } id="node-position-y" name="position-y" value={ y }></input><br />
-          <button type="button">Delete</button>
+          <button type="button" onClick={ this.deleteNode }>Delete Node</button>
       </form>
     )
   }

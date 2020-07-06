@@ -20,6 +20,7 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
     }
 
     this.weightChange = this.weightChange.bind(this);
+    this.removeConnection = this.removeConnection.bind(this);
   }
 
   weightChange(event: React.FormEvent<HTMLInputElement>) {
@@ -35,6 +36,13 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
     });
   }
 
+  removeConnection() {
+    if (this.state.line) {
+      const { origin, destination } = this.state.line.nodes;
+      this.props.visualizer.removeConnection(origin, destination); 
+    }
+  }
+
   static getDerivedStateFromProps(nextProps: LineEditorProps, prevState: LineEditorState) {
     return nextProps.line !== prevState.line ? {
       line: nextProps.line,
@@ -42,12 +50,13 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
   }
 
   render() {
-    const { weight } = this.state.line;
+    const line = this.state.line;
+    const { weight } = line;
     return (
       <form id="line-editor">
         <label>Weight</label>
         <input type="text" onChange={ this.weightChange } id="line-weight" name="line" value={ weight }></input><br />
-        <button type="button">Delete</button>
+        <button type="button" onClick={ this.removeConnection }>Remove Connection</button>
       </form>
     )
   }
