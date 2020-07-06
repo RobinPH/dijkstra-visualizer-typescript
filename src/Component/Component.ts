@@ -37,6 +37,12 @@ export abstract class Component {
     if (y != null) this.y = y;
   }
 
+  get color() {
+    if (this.isClicked()) return "blue";
+    if (this.isHighlighted()) return "green";
+    return "red";
+  }
+
   highlight(b: Boolean) {
     this.highlighted = b;
   }

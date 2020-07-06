@@ -6,6 +6,8 @@ import { ComponentHandler } from "./Handler/ComponentHandler";
 import { ScaleHandler } from "./Handler/ScaleHandler";
 import { PropertyEditor } from "./Component/PropertyEditor/Editor";
 import { ToolSelection } from "./Component/Menu";
+import { Algorithm } from "./Algorithm/Algorithm";
+import { Dijkstra } from "./Algorithm/Dijkstra";
 
 export enum EditMode {
   DRAG = "DRAG",
@@ -14,8 +16,8 @@ export enum EditMode {
 }
 
 export class Visualizer {
-  private nodes: Node[];
-  private lines: Line[];
+  private _nodes: Node[];
+  private _lines: Line[];
   private _canvas: Canvas;
   private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
@@ -27,10 +29,11 @@ export class Visualizer {
   private _propertyEditor: PropertyEditor;
   private _toolSelection: ToolSelection;
   private _currentLineWeight: number = 1;
+  private _algorithm: Algorithm = new Dijkstra();
 
   constructor(canvasId: string) {
-    this.nodes = new Array();
-    this.lines = new Array();
+    this._nodes = new Array();
+    this._lines = new Array();
     this._canvasDocument = document.querySelector(canvasId) as HTMLCanvasElement;
     this._canvas = new Canvas(this._canvasDocument);
     this.draw();
@@ -54,7 +57,7 @@ export class Visualizer {
   }
 
   removeNode(node: Node) {
-    this.nodes = this.nodes.filter((_node) => _node != node);
+    this._nodes = this.nodes.filter((_node) => _node != node);
     this.removeConnection(node);
 
     this._clickedComponent = this._clickedComponent.filter((component) => component != node);
@@ -72,7 +75,7 @@ export class Visualizer {
   }
 
   removeConnection(origin: Node, destination?: Node) {
-    this.lines = this.lines.filter((line) => {
+    this._lines = this.lines.filter((line) => {
       const lineNodes = line.nodes;
 
       if (destination != null) {
@@ -143,6 +146,13 @@ export class Visualizer {
     return name.reverse().join("");
   }
 
+  startAlgo() {
+    const path = (this._algorithm as Dijkstra).start(this.nodes[0], this.nodes[this.nodes.length - 1]).map((node) => {
+      return node.name;
+    });
+    (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = path.join(" -> ");
+  }
+
   get highlightedComponent() {
     return this._highlightedComponent;
   }
@@ -207,5 +217,13 @@ export class Visualizer {
 
   set currentLineWeight(weight: number) {
     this._currentLineWeight = weight;
+  }
+
+  get nodes() {
+    return this._nodes;
+  }
+
+  get lines() {
+    return this._lines;
   }
 }

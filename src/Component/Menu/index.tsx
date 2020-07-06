@@ -16,6 +16,7 @@ export class ToolSelection {
   render() {
     render((
     <>
+      <button type="button" onClick={ () => this.visualizer.startAlgo() }>Start Dijkstra</button><div id="algo-result"></div><br />
       <NewNode visualizer={ this.visualizer } />
       <NewLine visualizer={ this.visualizer } />
       <Tools visualizer={ this.visualizer } />

@@ -30,7 +30,15 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
     
     this.setState(() => {
       this.props.visualizer.updateComponent(this.state.line, (line) => {
+        const { origin, destination } = line.nodes;
         line.weight = newWeight;
+
+        for (const node of this.props.visualizer.nodes) {
+          if (node == origin) {
+            node.childrens.set(destination, newWeight);
+            return;
+          }
+        }
       });
       return {}
     });
