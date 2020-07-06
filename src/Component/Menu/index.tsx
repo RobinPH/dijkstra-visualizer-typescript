@@ -1,6 +1,7 @@
 import React from "react";
 import { render } from "react-dom";
 import { Visualizer, EditMode } from "../../Visualizer";
+import { NewNode } from "./newNode";
 
 export class ToolSelection {
   private elementId: string;
@@ -14,17 +15,18 @@ export class ToolSelection {
   render() {
     render((
     <>
-      <Tool visualizer={ this.visualizer } />
+      <NewNode visualizer={ this.visualizer } />
+      <Tools visualizer={ this.visualizer } />
     </>), document.querySelector(this.elementId));
   }
 }
 
-type ToolProps = {
+type ToolsProps = {
   visualizer: Visualizer;
 }
 
-class Tool extends React.Component<ToolProps> {
-  constructor(props: ToolProps) {
+class Tools extends React.Component<ToolsProps> {
+  constructor(props: ToolsProps) {
     super(props);
 
     this.toolSelectionChange = this.toolSelectionChange.bind(this);

@@ -5,7 +5,7 @@ import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
 import { ScaleHandler } from "./Handler/ScaleHandler";
 import { PropertyEditor } from "./Component/PropertyEditor/Editor";
-import { ToolSelection } from "./Component/ToolSelection";
+import { ToolSelection } from "./Component/Menu";
 
 export enum EditMode {
   DRAG = "DRAG",
@@ -42,7 +42,12 @@ export class Visualizer {
     this._toolSelection.render();
   }
 
-  addNode(node: Node) {
+  addNode(x: number, y: number, radius: number = 26, name: string = this.newNodeName()) {
+    this.nodes.push(new Node(x, y, radius, name));
+    this.draw();
+  }
+
+  addExistingNode(node: Node) {
     this.nodes.push(node);
     this.draw();
   }
@@ -125,6 +130,16 @@ export class Visualizer {
   updateComponent<T>(component: T, callbackfn: (component: T) => void) {
     callbackfn(component);
     this.draw();
+  }
+
+  newNodeName() {
+    let name: string[] = [];
+    
+    for (let i = this.nodes.length + 1; i > 0; i = i / 26 - i % 26) {
+      name.push(String.fromCharCode(65 + i % 26 - 1));
+    }
+
+    return name.reverse().join("");
   }
 
   get highlightedComponent() {
