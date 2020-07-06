@@ -3,30 +3,34 @@ import { Node } from "./Node";
 export abstract class Component {
   private x: number;
   private y: number;
-  private name: string;
+  private _name: string;
   private highlighted: Boolean = false;
   private clicked: Boolean = false;
 
   constructor(x: number, y: number, name: string) {
     this.x = x;
     this.y = y;
-    this.name = name;
+    this._name = name;
   }
 
-  getName() {
-    return this.name;
+  get name() {
+    return this._name;
   }
 
-  getPosition() {
+  set changeName(name: string) {
+    this._name = name;
+  }
+
+  get position() {
     return {
       x: this.x,
       y: this.y,
     }
   }
 
-  changePosition(x: number, y: number) {
-    this.x = x;
-    this.y = y;
+  set position({ x, y }: { x: number; y: number }) {
+    if (x != null) this.x = x;
+    if (y != null) this.y = y;
   }
 
   highlight(b: Boolean) {

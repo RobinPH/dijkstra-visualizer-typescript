@@ -27,7 +27,7 @@ export class ComponentHandler {
 
     for (const component of components) {
       if (component instanceof Node) {
-        const { x, y } = component.getPosition();
+        const { x, y } = component.position;
         if (Math.hypot(x - mouseX, y - mouseY) < component.radius) {
           hoveringOn.push(component);
         } else {
@@ -36,8 +36,8 @@ export class ComponentHandler {
       } else if (component instanceof Line) {
         const { origin, destination } = component.nodes;
         const radius = Math.min(origin.radius, destination.radius);
-        const { x: oX, y: oY } = origin.getPosition();
-        const { x: dX, y: dY } = destination.getPosition();
+        const { x: oX, y: oY } = origin.position;
+        const { x: dX, y: dY } = destination.position;
         const xMin = Math.min(oX, dX);
         const xMax = Math.max(oX, dX);
         const yMin = Math.min(oY, dY);
@@ -93,7 +93,7 @@ export class ComponentHandler {
           && this.visualizer.highlightedComponent != null) {
           for (const clickedComponent of this.visualizer.clickedComponents) {
             if (this.visualizer.highlightedComponent == clickedComponent) {
-              clickedComponent.changePosition(event.x, event.y);
+              clickedComponent.position = { x: event.x, y: event.y };
               this.highlightComponent(clickedComponent);
             }
           }

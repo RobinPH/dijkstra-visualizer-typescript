@@ -21,7 +21,7 @@ export class DrawHandler {
   }
 
   drawNode(node: Node) {
-    const { x, y } = node.getPosition();
+    const { x, y } = node.position;
 
     this.context.beginPath();
     this.context.arc(x, y, node.radius, 0, 2 * Math.PI, false);
@@ -42,7 +42,7 @@ export class DrawHandler {
     this.context.lineWidth = 1;
     this.context.font = '16px serif';
 
-    const name = node.getName()
+    const name = node.name
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(name);
     this.context.strokeText(name, x - stringWidth / 2, y + stringHeight / 2);
   }
@@ -51,8 +51,8 @@ export class DrawHandler {
     this.context.beginPath();
 
     const { origin, destination } = line.nodes;
-    const { x: x1, y: y1 } = origin.getPosition();
-    const { x: x2, y: y2} = destination.getPosition();
+    const { x: x1, y: y1 } = origin.position;
+    const { x: x2, y: y2} = destination.position;
     const midX = (x2 + x1) / 2;
     const midY = (y2 + y1) / 2;
     this.context.moveTo(x1, y1);

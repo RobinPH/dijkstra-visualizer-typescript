@@ -7,9 +7,9 @@ export class Line extends Component {
   private weight: number;
 
   constructor(origin: Node, destination: Node, weight: number) {
-    super(origin.getPosition().x,
-          origin.getPosition().y,
-          `${ origin.getName() } -> ${ destination.getName() }`);
+    super(origin.position.x,
+          origin.position.y,
+          `${ origin.name } -> ${ destination.name }`);
 
     this.origin = origin;
     this.destination = destination;
