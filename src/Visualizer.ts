@@ -26,6 +26,7 @@ export class Visualizer {
   private _biggestWeight: number = 0;
   private _propertyEditor: PropertyEditor;
   private _toolSelection: ToolSelection;
+  private _currentLineWeight: number = 1;
 
   constructor(canvasId: string) {
     this.nodes = new Array();
@@ -62,7 +63,7 @@ export class Visualizer {
     this.draw();
   }
 
-  addConnection(origin: Node, destination: Node, weight: number) {
+  addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight) {
     if (origin.hasConnectionTo(destination) == false) {
       origin.addChildren(destination, weight);
       this.lines.push(new Line(origin, destination, weight));
@@ -198,5 +199,13 @@ export class Visualizer {
 
   get propertyEditor() {
     return this._propertyEditor;
+  }
+  
+  get currentLineWeight() {
+    return this._currentLineWeight;
+  }
+
+  set currentLineWeight(weight: number) {
+    this._currentLineWeight = weight;
   }
 }

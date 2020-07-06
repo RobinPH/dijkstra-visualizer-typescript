@@ -132,7 +132,7 @@ export class ComponentHandler {
             if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
               const [component1, component2] = this.visualizer.clickedComponents;
               if (component1 instanceof Node && component2 instanceof Node) {
-                this.visualizer.addConnection(component1, component2, 72);
+                this.visualizer.addConnection(component1, component2);
               }
             }
           }

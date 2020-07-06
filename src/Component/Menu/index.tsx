@@ -1,7 +1,8 @@
 import React from "react";
 import { render } from "react-dom";
 import { Visualizer, EditMode } from "../../Visualizer";
-import { NewNode } from "./newNode";
+import { NewLine } from "./NewLine";
+import { NewNode } from "./NewNode";
 
 export class ToolSelection {
   private elementId: string;
@@ -16,6 +17,7 @@ export class ToolSelection {
     render((
     <>
       <NewNode visualizer={ this.visualizer } />
+      <NewLine visualizer={ this.visualizer } />
       <Tools visualizer={ this.visualizer } />
     </>), document.querySelector(this.elementId));
   }
