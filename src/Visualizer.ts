@@ -184,6 +184,8 @@ export class Visualizer {
 
   set editMode(editMode: EditMode) {
     this._editMode = editMode;
+
+    this._propertyEditor.render();
   }
 
   get canvas() {

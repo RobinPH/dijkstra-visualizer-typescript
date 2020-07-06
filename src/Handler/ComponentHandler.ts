@@ -24,7 +24,8 @@ export class ComponentHandler {
   checkIfHoveringOnComponent(mouseX: number, mouseY: number, components: Component[]) {
     const hoveringOn: Component[] = new Array();
     const notHoveringOn: Component[] = new Array();
-
+    mouseX += window.scrollX;
+    mouseY += window.scrollY;
     for (const component of components) {
       if (component instanceof Node) {
         const { x, y } = component.position;
@@ -93,7 +94,7 @@ export class ComponentHandler {
           && this.visualizer.draggingComponent != null) {
           for (const clickedComponent of this.visualizer.clickedComponents) {
             if (this.visualizer.draggingComponent == clickedComponent) {
-              clickedComponent.position = { x: event.x, y: event.y };
+              clickedComponent.position = { x: event.x + window.scrollX, y: event.y + window.scrollY };
               this.highlightComponent(clickedComponent);
             }
           }
