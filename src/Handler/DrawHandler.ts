@@ -71,7 +71,7 @@ export class DrawHandler {
     this.context.stroke();   
 
     this.context.font = '32px serif';
-    const weight = line.getWeight().toString();
+    const weight = line.weight.toString();
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(weight);
 
     this.context.strokeText(weight, midX - stringWidth / 2, midY + stringHeight / 2);

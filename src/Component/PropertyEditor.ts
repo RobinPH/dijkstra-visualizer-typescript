@@ -25,7 +25,7 @@ export class PropertyEditor {
         ${ component instanceof Line ? `
           <form id="line-editor">
             <label for="line">Weight</label><br>
-            <input type="text" id="line-weight" name="line" value=${ component.getWeight() }><br>
+            <input type="text" id="line-weight" name="line" value=${ component.weight }><br>
           <form>
         ` : `` }
       </div>
@@ -54,7 +54,7 @@ export class PropertyEditor {
           const weight = parseInt((event.target as HTMLFormElement).value);
           const component = this.visualizer.clickedComponents[0];
           if (component instanceof Line) {
-            component.setWeight(weight);
+            component.weight = weight;
             this.visualizer.draw();
           }
         } catch {}

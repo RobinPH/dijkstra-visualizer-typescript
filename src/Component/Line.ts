@@ -4,7 +4,7 @@ import { Node } from "./Node";
 export class Line extends Component {
   private origin: Node;
   private destination: Node;
-  private weight: number;
+  private _weight: number;
 
   constructor(origin: Node, destination: Node, weight: number) {
     super(origin.position.x,
@@ -13,15 +13,15 @@ export class Line extends Component {
 
     this.origin = origin;
     this.destination = destination;
-    this.weight = weight;
+    this._weight = weight;
   }
 
-  setWeight(n: number) {
-    this.weight = n;
+  set weight(weight: number) {
+    this._weight = weight;
   }
 
-  getWeight() {
-    return this.weight;
+  get weight() {
+    return this._weight;
   }
 
   get nodes() {

@@ -1,25 +1,25 @@
 import { Component } from "./Component";
 
 export class Node extends Component {
-  private childerns: Map<Node, number>;
+  private _childerns: Map<Node, number>;
   private _radius: number;
 
   constructor(x: number, y: number, radius: number, name: string) {
     super(x, y, name);
-    this.childerns = new Map();
+    this._childerns = new Map();
     this._radius = radius;
   }
 
   hasConnectionTo(children: Node) {
-    return this.childerns.get(children) != null || children.getChildrens().get(this) != null;
+    return this._childerns.get(children) != null || children.childrens.get(this) != null;
   }
 
   addChildren(children: Node, weight: number) {
-    this.childerns.set(children, weight);
+    this._childerns.set(children, weight);
   }
 
-  getChildrens() {
-    return this.childerns;
+  get childrens() {
+    return this._childerns;
   }
 
   set radius(n: number) {

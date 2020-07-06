@@ -21,6 +21,7 @@ export class Visualizer {
   private _draggingComponent: Component | null = null;
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
+  private _biggestWeight: number = 0;
   private propertyEditor: PropertyEditor;
 
   constructor(canvasId: string) {
@@ -46,6 +47,7 @@ export class Visualizer {
     if (origin.hasConnectionTo(destination) == false) {
       origin.addChildren(destination, weight);
       this.lines.push(new Line(origin, destination, weight));
+      this._biggestWeight = Math.max(this._biggestWeight, weight);
     }
   }
 
@@ -71,6 +73,10 @@ export class Visualizer {
 
   get clickedComponents() {
     return this._clickedComponent;
+  }
+
+  get biggestWeight() {
+    return this._biggestWeight;
   }
 
   editModeSelectionHandler() {
