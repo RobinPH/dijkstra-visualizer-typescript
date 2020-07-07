@@ -6,6 +6,7 @@ export class Line extends Component {
   private origin: Node;
   private destination: Node;
   private _weight: number;
+  private _weighted: Boolean = false;
   private _direction: AlgoOption;
 
   constructor(origin: Node, destination: Node, weight: number, direction: AlgoOption) {
@@ -24,7 +25,13 @@ export class Line extends Component {
   }
 
   get weight() {
-    return this._weight;
+    if (this._weighted) {
+      return this._weight;  
+    } else {
+      const { position: { x: x1, y: y1 } } = this.origin;
+      const { position: { x :x2, y: y2 } } = this.destination;
+      return Math.hypot(x1 - x2, y1 - y2);
+    }
   }
 
   get nodes() {
@@ -40,5 +47,9 @@ export class Line extends Component {
 
   set direction(d: AlgoOption) {
     this._direction = d;
+  }
+
+  set weighted(b: Boolean) {
+    this._weighted = b;
   }
 }

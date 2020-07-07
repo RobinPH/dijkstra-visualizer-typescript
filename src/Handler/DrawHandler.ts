@@ -27,7 +27,7 @@ export class DrawHandler {
     this.context.beginPath();
     this.context.arc(x, y, node.radius, 0, 2 * Math.PI, false);
 
-    this.context.fillStyle = node.color;
+    this.context.fillStyle = node.color || "white";
 
     this.context.fill();
     this.context.lineWidth = node.isClicked() || node.isHighlighted() ? 4 : 2;
@@ -35,11 +35,12 @@ export class DrawHandler {
     this.context.stroke();
 
     this.context.lineWidth = 1;
-    this.context.font = '16px serif';
+    this.context.font = '16px Arial';
 
     const name = node.name
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(name);
-    this.context.strokeText(name, x - stringWidth / 2, y + stringHeight / 2);
+    this.context.fillStyle = "black";
+    this.context.fillText(name, x - stringWidth / 2, y + stringHeight / 2);
   }
 
   drawLine(line: Line) {
@@ -48,29 +49,49 @@ export class DrawHandler {
     const { origin, destination } = line.nodes;
     const { x: x1, y: y1 } = origin.position;
     const { x: x2, y: y2} = destination.position;
-    const midX = (x2 + x1) / 2;
-    const midY = (y2 + y1) / 2;
-    this.context.moveTo(x1, y1);
-    this.context.lineTo(x2, y2);
 
-    this.context.strokeStyle = line.color;
+    const degree = Math.atan((x2 - x1) / (y2 - y1));
+    const xRatio = Math.sin(degree) * (y2 >= y1 ? 1 : -1);
+    const yRatio = Math.cos(degree) * (y2 >= y1 ? 1 : -1);
+    const ixRatio = Math.sin(degree + 90 * Math.PI / 180) * (y2 >= y1 ? 1 : -1);
+    const iyRatio = Math.cos(degree + 90 * Math.PI / 180) * (y2 >= y1 ? 1 : -1);
+
+    const originEdgeX = x1 + xRatio * origin.radius;
+    const originEdgeY = y1 + yRatio * origin.radius;
+    const destinationEdgeX = x2 - xRatio * destination.radius;
+    const destinationEdgeY = y2 - yRatio * destination.radius;
+
+    const midX = (destinationEdgeX + originEdgeX) / 2;
+    const midY = (destinationEdgeY + originEdgeY) / 2;
+    
+    this.context.moveTo(x1 + xRatio * origin.radius, y1 + yRatio * origin.radius);
+    this.context.lineTo(midX - xRatio * 15, midY - yRatio * 15);
+    this.context.moveTo(midX + xRatio * 15, midY + yRatio * 15);
+
+    if (line.direction == AlgoOption.BIDIRECTIONAL) {
+      this.context.lineTo(destinationEdgeX, destinationEdgeY);
+      this.context.strokeStyle = line.color || "black";
+    } else {
+      const arrowX = destinationEdgeX - xRatio * 10;
+      const arrowY = destinationEdgeY - yRatio * 10;
+      this.context.lineTo(arrowX, arrowY);
+      this.context.moveTo(destinationEdgeX, destinationEdgeY);
+      this.context.lineTo(arrowX - ixRatio * 10, arrowY - iyRatio * 10);
+      this.context.lineTo(arrowX + ixRatio * 10, arrowY + iyRatio * 10);
+      this.context.lineTo(destinationEdgeX, destinationEdgeY);
+      this.context.fillStyle = line.color || "white";
+      this.context.fill();
+    }
     
     this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 4 : 2;
     this.context.stroke();
 
-    if (line.direction == AlgoOption.DIRECTIONAL) {
-      this.context.strokeStyle = "purple";
-      this.context.beginPath();
-      this.context.moveTo(midX, midY);
-      this.context.lineTo(x2, y2)
-      this.context.stroke();
-    }
-
-    this.context.font = '32px serif';
-    const weight = line.weight.toString();
+    this.context.font = '24px Arial';
+    const weight = (+line.weight.toFixed(2)).toString();
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(weight);
 
-    this.context.strokeText(weight, midX - stringWidth / 2, midY + stringHeight / 2);
+    this.context.fillStyle = line.color || "black";
+    this.context.fillText(weight, midX - stringWidth / 2, midY + stringHeight / 2);
   }
 
   stringMetrics(string: string) {

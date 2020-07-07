@@ -17,12 +17,13 @@ export enum EditMode {
 
 export enum AlgoOption {
   DIRECTIONAL = "DIRECTIONAL",
-  BIDIRECTIONAL = "BIDIRECTIONA"
+  BIDIRECTIONAL = "BIDIRECTIONAL"
 }
 
 export class Visualizer {
-  private _nodes: Node[];
-  private _lines: Line[];
+  private _nodes: Node[] = new Array();;
+  private _lines: Line[] = new Array();;
+  private _nonRenderedLines: Line[] = new Array();;
   private _canvas: Canvas;
   private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
@@ -35,10 +36,9 @@ export class Visualizer {
   private _currentLineWeight: number = 1;
   private _algorithm: Algorithm = new Dijkstra();
   private _algorithmOption: AlgoOption = AlgoOption.BIDIRECTIONAL;
+  private _weighted: Boolean = true;
 
   constructor(canvasId: string) {
-    this._nodes = new Array();
-    this._lines = new Array();
     this._canvasDocument = document.querySelector(canvasId) as HTMLCanvasElement;
     this._canvas = new Canvas(this._canvasDocument);
     this.draw();
@@ -51,7 +51,7 @@ export class Visualizer {
     this._menu.render();
   }
 
-  addNode(x: number, y: number, radius: number = 26, name: string = this.newNodeName()) {
+  addNode(x: number, y: number, radius: number = 15, name: string = this.newNodeName()) {
     this.nodes.push(new Node(x, y, radius, name));
     this.draw();
   }
@@ -71,11 +71,12 @@ export class Visualizer {
     this.draw();
   }
 
-  addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight) {
-    if (origin.hasConnectionTo(destination) == false) {
-      origin.addChildren(destination, weight);
-      if (this._algorithmOption == AlgoOption.BIDIRECTIONAL) destination.addChildren(origin, weight);
-      this.lines.push(new Line(origin, destination, weight, this._algorithmOption));
+  addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption) {
+    if (!origin.hasConnectionTo(destination)) {
+      if (this._algorithmOption == AlgoOption.BIDIRECTIONAL) {
+        this._nonRenderedLines.push(destination.addChildren(origin, weight, this._algorithmOption));
+      }
+      this.lines.push(origin.addChildren(destination, weight, this._algorithmOption));
     }
     this.draw();
   }
@@ -231,6 +232,10 @@ export class Visualizer {
   get lines() {
     return this._lines;
   }
+
+  get nonRenderedLines() {
+    return this._nonRenderedLines;
+  }
   
   get algorithmOption() {
     return this._algorithmOption;
@@ -238,5 +243,13 @@ export class Visualizer {
 
   set algorithmOption(option: AlgoOption) {
     this._algorithmOption = option;
+  }
+
+  set weighted(b: boolean) {
+    [...this.lines, ...this.nonRenderedLines].forEach((line) => {
+      line.weighted = b;
+    })
+
+    this._weighted = b;
   }
 }

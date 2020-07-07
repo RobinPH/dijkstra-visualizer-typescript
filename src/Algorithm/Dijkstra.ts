@@ -15,7 +15,7 @@ export class Dijkstra extends Algorithm {
       const checkingNode = open.shift();
       closed.push(checkingNode!);
 
-      checkingNode?.childrens.forEach((weight, children) => {
+      checkingNode?.childrens.forEach(({ weight }, children) => {
         if (children == start || closed.includes(children)) return;
         const childrenData = map.get(children);
         const checkingNodeDistance = checkingNode == start ? 0 : map.get(checkingNode)!.distance;

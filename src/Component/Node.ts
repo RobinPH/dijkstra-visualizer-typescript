@@ -1,7 +1,9 @@
 import { Component } from "./Component";
+import { Line } from "./Line";
+import { AlgoOption } from "../Visualizer";
 
 export class Node extends Component {
-  private _childerns: Map<Node, number>;
+  private _childerns: Map<Node, Line>;
   private _radius: number;
 
   constructor(x: number, y: number, radius: number, name: string) {
@@ -11,11 +13,13 @@ export class Node extends Component {
   }
 
   hasConnectionTo(children: Node) {
-    return this._childerns.get(children) != null || children.childrens.get(this) != null;
+    return this._childerns.has(children) || children.childrens.has(this);
   }
 
-  addChildren(children: Node, weight: number) {
-    this._childerns.set(children, weight);
+  addChildren(children: Node, weight: number, direction: AlgoOption) {
+    const line = new Line(this, children, weight, direction);
+    this._childerns.set(children, line);
+    return line;
   }
 
   removeChildren(children: Node) {

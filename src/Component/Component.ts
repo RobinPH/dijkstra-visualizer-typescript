@@ -1,4 +1,5 @@
 import { Node } from "./Node";
+import { Line } from "./Line";
 
 interface IPosition {
   x: number;
@@ -40,7 +41,7 @@ export abstract class Component {
   get color() {
     if (this.isClicked()) return "blue";
     if (this.isHighlighted()) return "green";
-    return "red";
+    return null;
   }
 
   highlight(b: Boolean) {

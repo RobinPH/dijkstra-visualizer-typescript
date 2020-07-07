@@ -19,7 +19,7 @@ export class Canvas {
   }
 
   private setupCanvas() {
-    this.canvas.width = 500;
+    this.canvas.width = window.innerWidth;;
     this.canvas.height = 500;
   }
 

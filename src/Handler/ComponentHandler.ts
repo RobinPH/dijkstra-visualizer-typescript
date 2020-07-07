@@ -65,6 +65,8 @@ export class ComponentHandler {
       }
     }
 
+    this.visualizer.canvasDocument.style.cursor = hoveringOn.length > 0 ? 'pointer' : 'default';
+
     return {
       hoveringOn,
       notHoveringOn,
