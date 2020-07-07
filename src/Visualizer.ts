@@ -69,6 +69,10 @@ export class Visualizer {
     this._clickedComponent = this._clickedComponent.filter((component) => component != node);
     this._propertyEditor.render();
     this.highlightedComponent = null;
+
+    if (this._algorithmInput.get("start") == node) this._algorithmInput.delete("start");
+    if (this._algorithmInput.get("end") == node) this._algorithmInput.delete("end");
+
     this.draw();
   }
 
