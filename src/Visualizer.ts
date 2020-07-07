@@ -5,7 +5,7 @@ import { Line } from "./Component/Line";
 import { ComponentHandler } from "./Handler/ComponentHandler";
 import { ScaleHandler } from "./Handler/ScaleHandler";
 import { PropertyEditor } from "./Component/PropertyEditor/Editor";
-import { ToolSelection } from "./Component/Menu";
+import { Menu } from "./Component/Menu";
 import { Algorithm } from "./Algorithm/Algorithm";
 import { Dijkstra } from "./Algorithm/Dijkstra";
 
@@ -13,6 +13,11 @@ export enum EditMode {
   DRAG = "DRAG",
   CONNECT = "CONNECT",
   DELETE = "DELETE",
+}
+
+export enum AlgoOption {
+  DIRECTIONAL = "DIRECTIONAL",
+  BIDIRECTIONAL = "BIDIRECTIONA"
 }
 
 export class Visualizer {
@@ -25,11 +30,11 @@ export class Visualizer {
   private _draggingComponent: Component | null = null;
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
-  private _biggestWeight: number = 0;
   private _propertyEditor: PropertyEditor;
-  private _toolSelection: ToolSelection;
+  private _menu: Menu;
   private _currentLineWeight: number = 1;
   private _algorithm: Algorithm = new Dijkstra();
+  private _algorithmOption: AlgoOption = AlgoOption.BIDIRECTIONAL;
 
   constructor(canvasId: string) {
     this._nodes = new Array();
@@ -41,9 +46,9 @@ export class Visualizer {
     new ComponentHandler(this);
     new ScaleHandler(this);
     this._propertyEditor = new PropertyEditor("#property-editor", this);
-    this._toolSelection = new ToolSelection("#tool-selection", this);
+    this._menu = new Menu("#menu", this);
 
-    this._toolSelection.render();
+    this._menu.render();
   }
 
   addNode(x: number, y: number, radius: number = 26, name: string = this.newNodeName()) {
@@ -69,9 +74,10 @@ export class Visualizer {
   addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight) {
     if (origin.hasConnectionTo(destination) == false) {
       origin.addChildren(destination, weight);
-      this.lines.push(new Line(origin, destination, weight));
-      this._biggestWeight = Math.max(this._biggestWeight, weight);
+      if (this._algorithmOption == AlgoOption.BIDIRECTIONAL) destination.addChildren(origin, weight);
+      this.lines.push(new Line(origin, destination, weight, this._algorithmOption));
     }
+    this.draw();
   }
 
   removeConnection(origin: Node, destination?: Node) {
@@ -87,7 +93,10 @@ export class Visualizer {
       return true;
     });
 
-    if (destination) origin.removeChildren(destination);
+    if (destination) {
+      origin.removeChildren(destination);
+      destination.removeChildren(origin);
+    }
 
     this._clickedComponent.shift();
     this._propertyEditor.render();
@@ -147,10 +156,9 @@ export class Visualizer {
   }
 
   startAlgo() {
-    const path = (this._algorithm as Dijkstra).start(this.nodes[0], this.nodes[this.nodes.length - 1]).map((node) => {
-      return node.name;
-    });
-    (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = path.join(" -> ");
+    const path = (this._algorithm as Dijkstra).start(this.nodes[0], this.nodes[this.nodes.length - 1]).map((node) => node.name);
+    (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = path.length > 0 ? path.join(" -> ") : 'No Solution.';
+    this.draw();
   }
 
   get highlightedComponent() {
@@ -173,10 +181,6 @@ export class Visualizer {
     return this._clickedComponent;
   }
 
-  get biggestWeight() {
-    return this._biggestWeight;
-  }
-
   get mouseDown() {
     return this._mouseDown;
   }
@@ -197,6 +201,7 @@ export class Visualizer {
     this._editMode = editMode;
 
     this._propertyEditor.render();
+    this._menu.render();
   }
 
   get canvas() {
@@ -225,5 +230,13 @@ export class Visualizer {
 
   get lines() {
     return this._lines;
+  }
+  
+  get algorithmOption() {
+    return this._algorithmOption;
+  }
+
+  set algorithmOption(option: AlgoOption) {
+    this._algorithmOption = option;
   }
 }

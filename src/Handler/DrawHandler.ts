@@ -2,6 +2,7 @@ import { Node } from "../Component/Node";
 import { Component } from "../Component/Component";
 import { Line } from "../Component/Line";
 import { Canvas } from "../Canvas/Canvas";
+import { AlgoOption } from "../Visualizer";
 
 export class DrawHandler {
   private canvas: Canvas;
@@ -57,11 +58,13 @@ export class DrawHandler {
     this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 4 : 2;
     this.context.stroke();
 
-    this.context.strokeStyle = "purple";
-    this.context.beginPath();
-    this.context.moveTo(midX, midY);
-    this.context.lineTo(x2, y2)
-    this.context.stroke();
+    if (line.direction == AlgoOption.DIRECTIONAL) {
+      this.context.strokeStyle = "purple";
+      this.context.beginPath();
+      this.context.moveTo(midX, midY);
+      this.context.lineTo(x2, y2)
+      this.context.stroke();
+    }
 
     this.context.font = '32px serif';
     const weight = line.weight.toString();

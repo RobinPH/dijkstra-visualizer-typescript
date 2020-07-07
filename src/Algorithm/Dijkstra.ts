@@ -16,7 +16,7 @@ export class Dijkstra extends Algorithm {
       closed.push(checkingNode!);
 
       checkingNode?.childrens.forEach((weight, children) => {
-        if (children == start && closed.includes(children)) return;
+        if (children == start || closed.includes(children)) return;
         const childrenData = map.get(children);
         const checkingNodeDistance = checkingNode == start ? 0 : map.get(checkingNode)!.distance;
         
@@ -29,16 +29,17 @@ export class Dijkstra extends Algorithm {
 
         if (!open.includes(children)) open.push(children);
       })
-
+      
       open.sort((a, b) => map.get(a)!.distance - map.get(b)!.distance);
     }
 
     const path: Node[] = new Array();
 
+    if (map.get(end)?.pathVia == null) return path;
+    
     for (let pathVia = end; pathVia != null && pathVia != start; pathVia = map.get(pathVia)?.pathVia!) {
       path.push(pathVia)
     }
-
     path.push(start);
     return path.reverse();
   }
