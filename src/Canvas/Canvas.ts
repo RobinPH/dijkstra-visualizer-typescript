@@ -6,7 +6,7 @@ import { Line } from "../Component/Line";
 export class Canvas {
   private canvas: HTMLCanvasElement;
   private _context: CanvasRenderingContext2D;
-  private drawHandler: DrawHandler;
+  private _drawHandler: DrawHandler;
   private _scale: number = 1;
 
   constructor(canvas: HTMLCanvasElement) {
@@ -15,12 +15,12 @@ export class Canvas {
 
     this._context = this.canvas.getContext('2d')!;
 
-    this.drawHandler = new DrawHandler(this);
+    this._drawHandler = new DrawHandler(this);
   }
 
   private setupCanvas() {
-    this.canvas.width = window.innerWidth;;
-    this.canvas.height = 500;
+    this.canvas.width = window.innerWidth - 300;
+    this.canvas.height = window.innerHeight;
   }
 
   draw(components: Component[]) {
@@ -32,14 +32,14 @@ export class Canvas {
         highlighted = component
         return;
       }
-      this.drawHandler.draw(component);
+      this._drawHandler.draw(component);
     })
 
-    if (highlighted) this.drawHandler.draw(highlighted);
+    if (highlighted) this._drawHandler.draw(highlighted);
   }
 
   drawBackground() {
-    this.context.fillStyle = "lightgray";
+    this.context.fillStyle = "#fcfdff";
     this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   }
 
@@ -58,11 +58,22 @@ export class Canvas {
     this._scale = 1.0;
   }
 
+  get offset() {
+    return {
+      x: this.canvas.offsetLeft,
+      y: this.canvas.offsetTop,
+    }
+  }
+
   get context() {
     return this._context;
   }
 
   get scale() {
     return this._scale;
+  }
+
+  get drawHandler() {
+    return this._drawHandler;
   }
 }

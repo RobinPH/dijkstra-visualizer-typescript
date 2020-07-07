@@ -13,36 +13,28 @@ export class Options extends React.Component<OptionsProps, OptionsState> {
   constructor(props: OptionsProps) {
     super(props);
 
-    this.optionsChange = this.optionsChange.bind(this);
+    this.inputChange = this.inputChange.bind(this);
   }
 
-  optionsChange(event: React.FormEvent) {
-    const value = (event.currentTarget.querySelector("input:checked") as HTMLInputElement).value;
-    switch (value) {
-      case "directional":
-        this.props.visualizer.algorithmOption = AlgoOption.DIRECTIONAL;
-        break;
-      case "bidirectional":
-        this.props.visualizer.algorithmOption = AlgoOption.BIDIRECTIONAL;
-        break;
-      default:
-        this.props.visualizer.algorithmOption = AlgoOption.BIDIRECTIONAL;
+  inputChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const valueDiv = document.querySelector(".weighted .value") as HTMLDivElement;
+    if (event.currentTarget.checked) {
+      this.props.visualizer.weighted = true;
+    } else {
+      this.props.visualizer.weighted = false;
     }
   }
 
   render() {
     return (
-      <>
-        { this.props.visualizer.editMode == EditMode.CONNECT && (
-          <form onChange={ this.optionsChange }>
-            <input type="radio" id="bidrectional" name="direction" value="bidirectional" defaultChecked />
-            <label >Bidirectional</label><br />
-            <input type="radio" id="directional" name="direction" value="directional" />
-            <label >Directional</label><br />
-          </form>
-        ) }
-        <button type="button" onClick={ () => this.props.visualizer.startAlgo() }>Start Dijkstra</button><div id="algo-result"></div><br />
-      </>
+      <div className="weighted">
+        <div className="container-name">Options</div>
+        <label>
+          <input type="checkbox" onChange={ this.inputChange } defaultChecked />
+          <span />
+        </label>
+        <div className="value">Custom Weights</div>
+      </div>
     )
   }
 }

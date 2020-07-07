@@ -19,7 +19,7 @@ export class PropertyEditor {
   render(component?: Component) {
     render(component != null ? (
       <>
-        { this.visualizer.editMode == EditMode.DRAG && (
+        { this.visualizer.editMode != EditMode.DELETE && (
           <>
             { component instanceof Node && (<NodeEditor node={ component } visualizer={ this.visualizer } />) }
             { component instanceof Line && (<LineEditor line={ component } visualizer={ this.visualizer } />) }

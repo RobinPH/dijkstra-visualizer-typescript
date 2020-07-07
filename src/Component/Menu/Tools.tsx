@@ -9,36 +9,37 @@ export class Tools extends React.Component<ToolsProps> {
   constructor(props: ToolsProps) {
     super(props);
 
-    this.toolSelectionChange = this.toolSelectionChange.bind(this);
+    this.buttonClick = this.buttonClick.bind(this);
   }
 
-  toolSelectionChange(event: React.FormEvent) {
-    const value = (event.currentTarget.querySelector("input:checked") as HTMLInputElement).value;
-    switch (value) {
-      case "drag":
+  buttonClick(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    (document.querySelectorAll(".tools button") as NodeListOf<HTMLButtonElement>).forEach((button) => {
+      button.classList.add("disabled");
+    })
+    switch (event.currentTarget.innerText) {
+      case "Drag":
         this.props.visualizer.editMode = EditMode.DRAG;
         break;
-      case "connect":
+      case "Connect":
         this.props.visualizer.editMode = EditMode.CONNECT;
         break;
-      case "delete":
+      case "Delete":
         this.props.visualizer.editMode = EditMode.DELETE;
         break;
       default:
         this.props.visualizer.editMode = EditMode.DRAG;
     }
+
+    event.currentTarget.classList.remove("disabled");
   }
 
   render() {
     return (
-      <form onChange={ this.toolSelectionChange }>
-        <input type="radio" id="drag" name="edit-mode" value="drag" defaultChecked />
-        <label >Drag</label><br />
-        <input type="radio" id="connect" name="edit-mode" value="connect" />
-        <label >Connect</label><br />
-        <input type="radio" id="delete" name="edit-mode" value="delete" />
-        <label >Delete</label><br />
-      </form>
+      <div className="tools">
+        <button type="button" onClick={ this.buttonClick }>Drag</button>
+        <button type="button" onClick={ this.buttonClick } className="disabled">Connect</button>
+        <button type="button" onClick={ this.buttonClick } className="disabled">Delete</button>
+      </div>
     )
   }
 }

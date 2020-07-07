@@ -6,7 +6,7 @@ export class Line extends Component {
   private origin: Node;
   private destination: Node;
   private _weight: number;
-  private _weighted: Boolean = false;
+  private _weighted: Boolean = true;
   private _direction: AlgoOption;
 
   constructor(origin: Node, destination: Node, weight: number, direction: AlgoOption) {

@@ -1,6 +1,6 @@
 import React from "react";
 import { render } from "react-dom";
-import { Visualizer } from "../../Visualizer";
+import { Visualizer, EditMode } from "../../Visualizer";
 import { NewLine } from "./NewLine";
 import { NewNode } from "./NewNode";
 import { Tools } from "./Tools";
@@ -17,11 +17,16 @@ export class Menu {
 
   render() {
     render((
-    <>
-      <Options visualizer={ this.visualizer } />
-      <NewNode visualizer={ this.visualizer } />
-      <NewLine visualizer={ this.visualizer } />
-      <Tools visualizer={ this.visualizer } />
-    </>), document.querySelector(this.elementId));
+    <div className="menu">
+      <div className="header">
+        <div className="startButton"><button type="button" onClick={ () => this.visualizer.startAlgo() }>Start Dijkstra</button><div id="algo-result"></div><br /></div>
+        <Tools visualizer={ this.visualizer } />
+        <Options visualizer={ this.visualizer } />
+      </div>
+      <div>
+        { this.visualizer.editMode == EditMode.DRAG && <NewNode visualizer={ this.visualizer } /> }
+        { this.visualizer.editMode == EditMode.CONNECT && <NewLine visualizer={ this.visualizer } /> }
+      </div>
+    </div>), document.querySelector(this.elementId));
   }
 }

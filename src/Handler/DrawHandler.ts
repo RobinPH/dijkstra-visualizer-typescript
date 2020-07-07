@@ -13,29 +13,29 @@ export class DrawHandler {
     this.context = this.canvas.context;
   }
 
-  draw(component: Component) {
+  draw(component: Component, color?: string) {
     if (component instanceof Node) {
-      this.drawNode(component);
+      this.drawNode(component, color);
     } else if (component instanceof Line) {
-      this.drawLine(component);
+      this.drawLine(component, color);
     }
   }
 
-  drawNode(node: Node) {
+  drawNode(node: Node, color?: string) {
     const { x, y } = node.position;
 
     this.context.beginPath();
     this.context.arc(x, y, node.radius, 0, 2 * Math.PI, false);
 
-    this.context.fillStyle = node.color || "white";
+    this.context.fillStyle = color || node.color || "white";
 
     this.context.fill();
-    this.context.lineWidth = node.isClicked() || node.isHighlighted() ? 4 : 2;
+    this.context.lineWidth = node.isClicked() || node.isHighlighted() ? 3 : 2;
     this.context.strokeStyle = '#003300';
     this.context.stroke();
 
     this.context.lineWidth = 1;
-    this.context.font = '16px Arial';
+    this.context.font = '16px';
 
     const name = node.name
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(name);
@@ -43,12 +43,12 @@ export class DrawHandler {
     this.context.fillText(name, x - stringWidth / 2, y + stringHeight / 2);
   }
 
-  drawLine(line: Line) {
+  drawLine(line: Line, color?: string) {
     this.context.beginPath();
 
     const { origin, destination } = line.nodes;
     const { x: x1, y: y1 } = origin.position;
-    const { x: x2, y: y2} = destination.position;
+    const { x: x2, y: y2 } = destination.position;
 
     const degree = Math.atan((x2 - x1) / (y2 - y1));
     const xRatio = Math.sin(degree) * (y2 >= y1 ? 1 : -1);
@@ -65,28 +65,29 @@ export class DrawHandler {
     const midY = (destinationEdgeY + originEdgeY) / 2;
     
     this.context.moveTo(x1 + xRatio * origin.radius, y1 + yRatio * origin.radius);
-    this.context.lineTo(midX - xRatio * 15, midY - yRatio * 15);
-    this.context.moveTo(midX + xRatio * 15, midY + yRatio * 15);
+    this.context.lineTo(midX - xRatio * 10, midY - yRatio * 10);
+    this.context.moveTo(midX + xRatio * 10, midY + yRatio * 10);
 
     if (line.direction == AlgoOption.BIDIRECTIONAL) {
       this.context.lineTo(destinationEdgeX, destinationEdgeY);
-      this.context.strokeStyle = line.color || "black";
+      this.context.strokeStyle = color || line.color || "black";
     } else {
-      const arrowX = destinationEdgeX - xRatio * 10;
-      const arrowY = destinationEdgeY - yRatio * 10;
+      const arrowLength = destination.radius / 2 / 2;
+      const arrowX = destinationEdgeX - xRatio * arrowLength;
+      const arrowY = destinationEdgeY - yRatio * arrowLength;
       this.context.lineTo(arrowX, arrowY);
       this.context.moveTo(destinationEdgeX, destinationEdgeY);
-      this.context.lineTo(arrowX - ixRatio * 10, arrowY - iyRatio * 10);
-      this.context.lineTo(arrowX + ixRatio * 10, arrowY + iyRatio * 10);
+      this.context.lineTo(arrowX - ixRatio * arrowLength, arrowY - iyRatio * arrowLength);
+      this.context.lineTo(arrowX + ixRatio * arrowLength, arrowY + iyRatio * arrowLength);
       this.context.lineTo(destinationEdgeX, destinationEdgeY);
-      this.context.fillStyle = line.color || "white";
+      this.context.fillStyle = line.color || "black";
       this.context.fill();
     }
     
-    this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 4 : 2;
+    this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 3 : 2;
     this.context.stroke();
 
-    this.context.font = '24px Arial';
+    this.context.font = '24px';
     const weight = (+line.weight.toFixed(2)).toString();
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(weight);
 

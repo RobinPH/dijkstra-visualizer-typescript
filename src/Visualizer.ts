@@ -36,7 +36,8 @@ export class Visualizer {
   private _currentLineWeight: number = 1;
   private _algorithm: Algorithm = new Dijkstra();
   private _algorithmOption: AlgoOption = AlgoOption.BIDIRECTIONAL;
-  private _weighted: Boolean = true;
+  private _algorithmInput: Map<"start" | "end", Node> = new Map();
+  private _weighted: boolean = true;
 
   constructor(canvasId: string) {
     this._canvasDocument = document.querySelector(canvasId) as HTMLCanvasElement;
@@ -78,6 +79,9 @@ export class Visualizer {
       }
       this.lines.push(origin.addChildren(destination, weight, this._algorithmOption));
     }
+
+    this.clearClickedComponents();
+    this._menu.render();
     this.draw();
   }
 
@@ -111,6 +115,12 @@ export class Visualizer {
 
   async draw() {
     this._canvas.draw([...this.lines, ...this.nodes]);
+
+    const start = this._algorithmInput.get("start");
+    const end = this._algorithmInput.get("end");
+
+    if (start != null) this.canvas.drawHandler.draw(start, "lightgreen")
+    if (end != null) this.canvas.drawHandler.draw(end, "pink")
   }
 
   addClickedComponent(component: Component) {
@@ -149,16 +159,33 @@ export class Visualizer {
   newNodeName() {
     let name: string[] = [];
     
-    for (let i = this.nodes.length + 1; i > 0; i = i / 26 - i % 26) {
-      name.push(String.fromCharCode(65 + i % 26 - 1));
-    }
+    let n = this.nodes.length;
+
+    do {
+      name.push(String.fromCharCode(65 + n % 26));
+      n -= n % 26;
+      n /= 26;
+    } while (n > 0);
 
     return name.reverse().join("");
   }
 
   startAlgo() {
-    const path = (this._algorithm as Dijkstra).start(this.nodes[0], this.nodes[this.nodes.length - 1]).map((node) => node.name);
+    const start = this._algorithmInput.get("start");
+    const end = this._algorithmInput.get("end");
+
+    if (start == null || end == null) {
+      (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = "Please provide start, and end node.";
+      return;
+    }
+
+    const path = (this._algorithm as Dijkstra).start(start, end).map((node) => node.name);
     (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = path.length > 0 ? path.join(" -> ") : 'No Solution.';
+    this.draw();
+  }
+
+  changeAlgoInput(what: "start" | "end", node: Node) {
+    this._algorithmInput.set(what, node);
     this.draw();
   }
 
@@ -251,5 +278,15 @@ export class Visualizer {
     })
 
     this._weighted = b;
+
+    this.draw();
+  }
+
+  get weighted() {
+    return this._weighted;
+  }
+
+  get algorithmInput() {
+    return this._algorithmInput;
   }
 }

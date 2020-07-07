@@ -11,9 +11,9 @@ const node6 = new Node(75, 379, 15, "F");
 const node7 = new Node(226, 407, 15, "G");
 const node8 = new Node(165, 308, 15, "H");
 const node9 = new Node(342, 282, 15, "I");
-const node10 = new Node(457, 282, 15, "J");
-const node11 = new Node(402, 357, 15, "K");
-const node12 = new Node(397, 205, 15, "L");
+const node10 = new Node(458, 282, 15, "J");
+const node11 = new Node(400, 359, 15, "K");
+const node12 = new Node(400, 205, 15, "L");
 const node13 = new Node(336, 437, 15, "E");
 
 visualizer.addExistingNode(node1);

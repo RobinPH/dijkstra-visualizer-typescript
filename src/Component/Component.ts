@@ -39,8 +39,9 @@ export abstract class Component {
   }
 
   get color() {
-    if (this.isClicked()) return "blue";
-    if (this.isHighlighted()) return "green";
+    if (this.isClicked()) return "#ffcc33";
+    if (this.isHighlighted()) return "grey";
+
     return null;
   }
 
