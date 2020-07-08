@@ -206,6 +206,9 @@ export class Visualizer {
   }
 
   changeAlgoInput(what: "start" | "end", node: Node) {
+    if (this._algorithmInput.get(what == "start" ? "end" : "start") == node) {
+      this._algorithmInput.delete(what == "start" ? "end" : "start");
+    }
     this._algorithmInput.set(what, node);
     this.draw();
   }
