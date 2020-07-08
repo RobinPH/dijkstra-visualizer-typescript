@@ -68,9 +68,10 @@ export class DrawHandler {
     this.context.lineTo(midX - xRatio * 10, midY - yRatio * 10);
     this.context.moveTo(midX + xRatio * 10, midY + yRatio * 10);
 
+    this.context.strokeStyle = color || line.color || "black";
+    
     if (line.direction == AlgoOption.BIDIRECTIONAL) {
       this.context.lineTo(destinationEdgeX, destinationEdgeY);
-      this.context.strokeStyle = color || line.color || "black";
     } else {
       const arrowLength = destination.radius / 2 / 2;
       const arrowX = destinationEdgeX - xRatio * arrowLength;

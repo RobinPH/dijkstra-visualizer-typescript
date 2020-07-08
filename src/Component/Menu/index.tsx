@@ -24,7 +24,7 @@ export class Menu {
         <Options visualizer={ this.visualizer } />
       </div>
       <div>
-        { this.visualizer.clickedComponents.length == 0 && this.visualizer.editMode == EditMode.DRAG && <NewNode visualizer={ this.visualizer } /> }
+        { this.visualizer.clickedComponent == null && this.visualizer.editMode == EditMode.DRAG && <NewNode visualizer={ this.visualizer } /> }
         { this.visualizer.editMode == EditMode.CONNECT && <NewLine visualizer={ this.visualizer } /> }
       </div>
     </div>), document.querySelector(this.elementId));

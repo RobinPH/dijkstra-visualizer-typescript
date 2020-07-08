@@ -75,7 +75,10 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
         } else {
           destination.addChildren(origin, line.weight, AlgoOption.BIDIRECTIONAL);
         }
+
         line.direction = direction;
+
+        this.props.visualizer.clickComponent(line)
       });
       return {}
     });

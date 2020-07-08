@@ -93,16 +93,14 @@ export class ComponentHandler {
 
   dragHandler() {
     this.visualizer.canvasDocument.addEventListener("mousemove", (event) => {
+      const clickedComponent = this.visualizer.clickedComponent;
       if (this.visualizer.mouseDown
-          && this.visualizer.draggingComponent != null) {
-          for (const clickedComponent of this.visualizer.clickedComponents) {
-            if (this.visualizer.draggingComponent == clickedComponent) {
-              const { x: offsetX, y: offsetY } = this.visualizer.canvas.offset;
-              clickedComponent.position = { x: event.x + window.scrollX - offsetX, y: event.y + window.scrollY + offsetY };
-              this.highlightComponent(clickedComponent);
-            }
-          }
-        }
+          && this.visualizer.draggingComponent != null
+          && this.visualizer.draggingComponent == clickedComponent) {
+            const { x: offsetX, y: offsetY } = this.visualizer.canvas.offset;
+            clickedComponent.position = { x: event.x + window.scrollX - offsetX, y: event.y + window.scrollY + offsetY };
+            this.highlightComponent(clickedComponent);
+      }
     })
   }
 
@@ -117,7 +115,7 @@ export class ComponentHandler {
       this.visualizer.mouseDown = true;
 
       const highlightedComponent = this.visualizer.highlightedComponent;
-      const clickedComponents = this.visualizer.clickedComponents;
+      const clickedComponent = this.visualizer.clickedComponent;
 
       if (highlightedComponent != null) {
         if (this.visualizer.editMode == EditMode.DELETE) {
@@ -127,22 +125,20 @@ export class ComponentHandler {
             this.visualizer.removeLine(highlightedComponent)
           }
         } else {
-          if (clickedComponents.includes(highlightedComponent)) {
-            this.visualizer.removeClickedComponent(highlightedComponent);
-          } else {
-            this.visualizer.addClickedComponent(highlightedComponent);
-            this.visualizer.draggingComponent = highlightedComponent;
-            highlightedComponent.click(true);
-            if (this.visualizer.clickedComponents.length == 2 && this.visualizer.editMode == EditMode.CONNECT) {
-              const [component1, component2] = this.visualizer.clickedComponents;
-              if (component1 instanceof Node && component2 instanceof Node) {
-                this.visualizer.addConnection(component1, component2);
-              }
+          if (clickedComponent == highlightedComponent) {
+            this.visualizer.removeClickedComponent();
+          } else if (clickedComponent != null && this.visualizer.editMode == EditMode.CONNECT) {
+            if (clickedComponent instanceof Node && highlightedComponent instanceof Node) {
+              this.visualizer.addConnection(clickedComponent, highlightedComponent);
             }
+          } else {
+            this.visualizer.removeClickedComponent();
+            this.visualizer.clickComponent(highlightedComponent);
+            highlightedComponent.click(true);
           }
         }
       } else {
-        this.visualizer.clearClickedComponents();
+        this.visualizer.removeClickedComponent();
       }
 
       this.visualizer.draw();

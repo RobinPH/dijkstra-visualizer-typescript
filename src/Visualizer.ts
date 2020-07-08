@@ -26,7 +26,7 @@ export class Visualizer {
   private _canvas: Canvas;
   private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
-  private _clickedComponent: Component[] = new Array();
+  private _clickedComponent: Component | null = null;
   private _draggingComponent: Component | null = null;
   private _mouseDown: Boolean = false;
   private _editMode: EditMode = EditMode.DRAG;
@@ -70,9 +70,9 @@ export class Visualizer {
       _node.childrens.delete(node);
     })
 
-    this._clickedComponent = this._clickedComponent.filter((component) => component != node);
-    this._propertyEditor.render();
+    this._clickedComponent = null;
     this.highlightedComponent = null;
+    this._propertyEditor.render();
 
     if (this._algorithmInput.get("start") == node) this._algorithmInput.delete("start");
     if (this._algorithmInput.get("end") == node) this._algorithmInput.delete("end");
@@ -81,16 +81,20 @@ export class Visualizer {
   }
 
   addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption) {
+    let line: Line | null = null;
     if (!origin.hasConnectionTo(destination)) {
+      
       if (direction == AlgoOption.BIDIRECTIONAL) {
         destination.addChildren(origin, weight, direction);
       }
-      this.lines.push(origin.addChildren(destination, weight, direction));
+      line = origin.addChildren(destination, weight, direction);
+      this.lines.push(line);
     }
-
-    this.clearClickedComponents();
+    
     this._menu.render();
     this.draw();
+
+    if (line != null) return line;
   }
 
   removeConnection(origin: Node, destination?: Node) {
@@ -111,9 +115,9 @@ export class Visualizer {
       destination.removeChildren(origin);
     }
 
-    this._clickedComponent.shift();
-    this._propertyEditor.render();
+    this._clickedComponent = null;
     this.highlightedComponent = null;
+    this._propertyEditor.render();
     this.draw();
   }
 
@@ -122,10 +126,9 @@ export class Visualizer {
   }
 
   flipLineDirection({ weight, direction, nodes: { origin, destination } }: Line) {
-    console.log('asdas')
     this.removeConnection(origin, destination);
-    console.log('asdas2')
-    this.addConnection(destination, origin, weight, direction);
+    const flippedLine = this.addConnection(destination, origin, weight, direction);
+    if (flippedLine != null) this.clickComponent(flippedLine);
     this.draw();
   }
 
@@ -139,35 +142,17 @@ export class Visualizer {
     if (end != null) this.canvas.drawHandler.draw(end, "pink")
   }
 
-  addClickedComponent(component: Component) {
-    if (component != null) {
-      const MAX = (this._editMode == EditMode.DRAG ? 1 : 2);
-      while (this._clickedComponent.length >= MAX) {
-        this._clickedComponent.shift()?.click(false);
-      }
-      this._clickedComponent?.push(component);
-    }
-    this._propertyEditor.render(this._clickedComponent[0]);
+  clickComponent(component: Component) {
+    component.click(true);
+    this._clickedComponent = component
+    this._propertyEditor.render(this._clickedComponent);
 
     this._menu.render();
   }
 
-  removeClickedComponent(component: Component) {
-    const index = this._clickedComponent.indexOf(component);
-
-    if (index != -1) {
-      this._clickedComponent.splice(index, 1);
-      component.click(false);
-    }
-    this._propertyEditor.render(this._clickedComponent[0]);
-
-    this._menu.render();
-  }
-
-  clearClickedComponents() {
-    while (this._clickedComponent.length > 0) {
-      this._clickedComponent.pop()?.click(false);
-    }
+  removeClickedComponent() {
+    this._clickedComponent?.click(false);
+    this._clickedComponent = null;
     this._propertyEditor.render();
     this._menu.render();
   }
@@ -229,7 +214,7 @@ export class Visualizer {
     this._draggingComponent = component;
   }
 
-  get clickedComponents() {
+  get clickedComponent() {
     return this._clickedComponent;
   }
 
