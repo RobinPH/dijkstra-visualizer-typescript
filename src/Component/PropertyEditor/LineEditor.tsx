@@ -22,6 +22,7 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
     this.weightChange = this.weightChange.bind(this);
     this.removeConnection = this.removeConnection.bind(this);
     this.directionChange = this.directionChange.bind(this);
+    this.flipDirection = this.flipDirection.bind(this);
   }
 
   weightChange(event: React.FormEvent<HTMLInputElement>) {
@@ -80,6 +81,13 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
     });
   }
 
+  flipDirection() {
+    this.setState(() => {
+      this.props.visualizer.flipLineDirection(this.state.line);
+      return {}
+    })
+  }
+
   static getDerivedStateFromProps(nextProps: LineEditorProps, prevState: LineEditorState) {
     return nextProps.line !== prevState.line ? {
       line: nextProps.line,
@@ -112,6 +120,7 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
           <input type="radio" id="directional" name="direction" value="directional" />
           <label >Directional</label><br />
         </form><br />
+        { this.state.line.direction == AlgoOption.DIRECTIONAL && (<><button type="button" onClick={ this.flipDirection } style={{marginBottom: "10px"}}>Flip Direction</button></>) }
         <button type="button" onClick={ this.removeConnection }>Remove Connection</button>
       </div>
     )

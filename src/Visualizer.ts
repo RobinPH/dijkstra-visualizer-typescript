@@ -115,12 +115,18 @@ export class Visualizer {
     this._propertyEditor.render();
     this.highlightedComponent = null;
     this.draw();
-
-    console.log(this._nodes)
   }
 
   removeLine({ nodes: { origin, destination } }: Line) {
     this.removeConnection(origin, destination);
+  }
+
+  flipLineDirection({ weight, direction, nodes: { origin, destination } }: Line) {
+    console.log('asdas')
+    this.removeConnection(origin, destination);
+    console.log('asdas2')
+    this.addConnection(destination, origin, weight, direction);
+    this.draw();
   }
 
   async draw() {
@@ -143,7 +149,7 @@ export class Visualizer {
     }
     this._propertyEditor.render(this._clickedComponent[0]);
 
-    console.log(component)
+    this._menu.render();
   }
 
   removeClickedComponent(component: Component) {
@@ -154,6 +160,8 @@ export class Visualizer {
       component.click(false);
     }
     this._propertyEditor.render(this._clickedComponent[0]);
+
+    this._menu.render();
   }
 
   clearClickedComponents() {
@@ -161,6 +169,7 @@ export class Visualizer {
       this._clickedComponent.pop()?.click(false);
     }
     this._propertyEditor.render();
+    this._menu.render();
   }
 
   updateComponent<T>(component: T, callbackfn: (component: T) => void) {
