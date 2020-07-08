@@ -65,6 +65,7 @@ export class Visualizer {
     this._nodes = this.nodes.filter((_node) => _node != node);
     this.removeConnection(node);
 
+    
     this._nodes.forEach((_node) => {
       _node.childrens.delete(node);
     })
@@ -81,10 +82,10 @@ export class Visualizer {
 
   addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption) {
     if (!origin.hasConnectionTo(destination)) {
-      if (this._algorithmOption == AlgoOption.BIDIRECTIONAL) {
-        destination.addChildren(origin, weight, this._algorithmOption);
+      if (direction == AlgoOption.BIDIRECTIONAL) {
+        destination.addChildren(origin, weight, direction);
       }
-      this.lines.push(origin.addChildren(destination, weight, this._algorithmOption));
+      this.lines.push(origin.addChildren(destination, weight, direction));
     }
 
     this.clearClickedComponents();
@@ -141,6 +142,8 @@ export class Visualizer {
       this._clickedComponent?.push(component);
     }
     this._propertyEditor.render(this._clickedComponent[0]);
+
+    console.log(component)
   }
 
   removeClickedComponent(component: Component) {

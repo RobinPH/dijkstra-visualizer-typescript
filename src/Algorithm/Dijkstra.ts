@@ -7,10 +7,10 @@ export class Dijkstra extends Algorithm {
   }
 
   start(start: Node, end: Node) {
-    const map: Map<Node, { distance: number; pathVia: Node }> = new Map();
+    const map: Map<Node, { distance: number; pathVia: Node | null }> = new Map();
     const open: Node[] = [ start ];
     const closed: Node[] = [];
-
+    
     while (open.length > 0) {
       const checkingNode = open.shift();
       closed.push(checkingNode!);
@@ -20,7 +20,7 @@ export class Dijkstra extends Algorithm {
         const childrenData = map.get(children);
         const checkingNodeDistance = checkingNode == start ? 0 : map.get(checkingNode)!.distance;
         
-        if (childrenData != null ? childrenData.distance > checkingNodeDistance : true) {
+        if (childrenData != null ? childrenData.distance > weight + checkingNodeDistance : true) {
           map.set(children, {
             distance: weight + checkingNodeDistance,
             pathVia: checkingNode,
@@ -29,7 +29,7 @@ export class Dijkstra extends Algorithm {
 
         if (!open.includes(children)) open.push(children);
       })
-      
+
       open.sort((a, b) => map.get(a)!.distance - map.get(b)!.distance);
     }
 
