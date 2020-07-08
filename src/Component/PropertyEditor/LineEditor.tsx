@@ -89,6 +89,8 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
   }
 
   static getDerivedStateFromProps(nextProps: LineEditorProps, prevState: LineEditorState) {
+    const direction = nextProps.line.direction;
+
     return nextProps.line !== prevState.line ? {
       line: nextProps.line,
     } : null;
@@ -96,7 +98,7 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
 
   render() {
     const line = this.state.line;
-    const { weight } = line;
+    const { weight, direction } = line;
 
     return (
       <div className="lineEditor">
@@ -114,10 +116,10 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
           ) }
           <br />
         </form>
-        <form onChange={ this.directionChange }>
-          <input type="radio" id="bidrectional" name="direction" value="bidirectional" defaultChecked />
+        <form onChange={ this.directionChange } className="directions">
+          <input type="radio" id="bidrectional" name="direction" value="bidirectional" checked={ direction == AlgoOption.BIDIRECTIONAL } readOnly />
           <label >Bidirectional</label><br />
-          <input type="radio" id="directional" name="direction" value="directional" />
+          <input type="radio" id="directional" name="direction" value="directional" checked={ direction == AlgoOption.DIRECTIONAL } readOnly />
           <label >Directional</label><br />
         </form><br />
         { this.state.line.direction == AlgoOption.DIRECTIONAL && (<><button type="button" onClick={ this.flipDirection } style={{marginBottom: "10px"}}>Flip Direction</button></>) }
