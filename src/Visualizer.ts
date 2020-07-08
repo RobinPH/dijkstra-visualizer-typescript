@@ -21,9 +21,8 @@ export enum AlgoOption {
 }
 
 export class Visualizer {
-  private _nodes: Node[] = new Array();;
-  private _lines: Line[] = new Array();;
-  private _nonRenderedLines: Line[] = new Array();;
+  private _nodes: Node[] = new Array();
+  private _lines: Line[] = new Array();
   private _canvas: Canvas;
   private _canvasDocument: HTMLCanvasElement;
   private _highlightedComponent: Component | null = null;
@@ -79,7 +78,7 @@ export class Visualizer {
   addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption) {
     if (!origin.hasConnectionTo(destination)) {
       if (this._algorithmOption == AlgoOption.BIDIRECTIONAL) {
-        this._nonRenderedLines.push(destination.addChildren(origin, weight, this._algorithmOption));
+        destination.addChildren(origin, weight, this._algorithmOption);
       }
       this.lines.push(origin.addChildren(destination, weight, this._algorithmOption));
     }
@@ -111,6 +110,8 @@ export class Visualizer {
     this._propertyEditor.render();
     this.highlightedComponent = null;
     this.draw();
+
+    console.log(this._nodes)
   }
 
   removeLine({ nodes: { origin, destination } }: Line) {
@@ -264,10 +265,6 @@ export class Visualizer {
     return this._lines;
   }
 
-  get nonRenderedLines() {
-    return this._nonRenderedLines;
-  }
-  
   get algorithmOption() {
     return this._algorithmOption;
   }
@@ -277,7 +274,7 @@ export class Visualizer {
   }
 
   set weighted(b: boolean) {
-    [...this.lines, ...this.nonRenderedLines].forEach((line) => {
+    this.lines.forEach((line) => {
       line.weighted = b;
     })
 

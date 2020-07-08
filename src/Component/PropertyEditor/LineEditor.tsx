@@ -68,6 +68,12 @@ export class LineEditor extends React.Component<LineEditorProps, LineEditorState
 
     this.setState(() => {
       this.props.visualizer.updateComponent(this.state.line, (line) => {
+        const { origin, destination } = line.nodes;
+        if (direction == AlgoOption.DIRECTIONAL) {
+          destination.removeChildren(origin);
+        } else {
+          destination.addChildren(origin, line.weight, AlgoOption.BIDIRECTIONAL);
+        }
         line.direction = direction;
       });
       return {}
