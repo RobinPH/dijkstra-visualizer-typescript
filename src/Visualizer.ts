@@ -65,6 +65,10 @@ export class Visualizer {
     this._nodes = this.nodes.filter((_node) => _node != node);
     this.removeConnection(node);
 
+    this._nodes.forEach((_node) => {
+      _node.childrens.delete(node);
+    })
+
     this._clickedComponent = this._clickedComponent.filter((component) => component != node);
     this._propertyEditor.render();
     this.highlightedComponent = null;
