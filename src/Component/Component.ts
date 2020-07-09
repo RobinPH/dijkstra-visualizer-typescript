@@ -11,6 +11,7 @@ export abstract class Component {
   private _name: string;
   private highlighted: Boolean = false;
   private clicked: Boolean = false;
+  private _path: Boolean = false;
 
   constructor(x: number, y: number, name: string) {
     this.x = x;
@@ -59,5 +60,13 @@ export abstract class Component {
 
   isClicked() {
     return this.clicked;
+  }
+
+  isPath() {
+    return this._path;
+  }
+
+  set path(b: boolean) {
+    this._path = b;
   }
 }

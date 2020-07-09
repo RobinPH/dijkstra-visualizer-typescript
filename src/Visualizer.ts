@@ -36,6 +36,7 @@ export class Visualizer {
   private _algorithm: Algorithm = new Dijkstra();
   private _algorithmOption: AlgoOption = AlgoOption.DIRECTIONAL;
   private _algorithmInput: Map<"start" | "end", Node> = new Map();
+  private _algoPath: Component[] = new Array();
   private _weighted: boolean = true;
 
   constructor(canvasId: string) {
@@ -179,14 +180,33 @@ export class Visualizer {
   startAlgo() {
     const start = this._algorithmInput.get("start");
     const end = this._algorithmInput.get("end");
+    
+    this._algoPath.forEach((component) => component.path = false);  
 
     if (start == null || end == null) {
       return "Please provide start, and end node.";
     }
 
-    const path = (this._algorithm as Dijkstra).start(start, end).map((node) => node.name);
+    const path = (this._algorithm as Dijkstra).start(start, end);
 
-    return path.length > 0 ? path.join(" ➜ ") : 'No Solution.';
+    if (path != null) {
+      let prevNode: Node | null = null;
+      for (const node of path) {
+        node.path = true;
+        this._algoPath.push(node)
+        if (prevNode != null) {
+          const line = prevNode.childrens.get(node)!;
+          line.path = true;
+          this._algoPath.push(line);
+        }
+        prevNode = node;
+      }
+    }
+    
+    const names = path.map((node) => node.name);
+
+    this.draw();
+    return names.length > 0 ? names.join(" ➜ ") : 'No Solution.';
   }
 
   changeAlgoInput(what: "start" | "end", node: Node) {
@@ -200,7 +220,8 @@ export class Visualizer {
   deleteAllComponents() {
     this._nodes = new Array();
     this._lines = new Array();
-    
+    this._algorithmInput.delete("start");
+    this._algorithmInput.delete("end");
     this.removeClickedComponent();
     this.draw();
   }

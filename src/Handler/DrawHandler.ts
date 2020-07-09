@@ -35,7 +35,6 @@ export class DrawHandler {
     this.context.stroke();
 
     this.context.lineWidth = 1;
-    this.context.font = '16px';
 
     const name = node.name
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(name);
@@ -88,7 +87,6 @@ export class DrawHandler {
     this.context.lineWidth = line.isClicked() || line.isHighlighted() ? 3 : 2;
     this.context.stroke();
 
-    this.context.font = '24px';
     const weight = (+line.weight.toFixed(2)).toString();
     const { width: stringWidth, height: stringHeight } = this.stringMetrics(weight);
 

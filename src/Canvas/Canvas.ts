@@ -25,6 +25,7 @@ export class Canvas {
 
   draw(components: Component[]) {
     let highlighted: Component | null = null;
+    let path: Component[] = new Array();
     this.drawBackground();
 
     components.forEach((component) => {
@@ -32,10 +33,18 @@ export class Canvas {
         highlighted = component
         return;
       }
+      if (component.isPath()) {
+        path.push(component);
+        return;
+      }
       this._drawHandler.draw(component);
     })
 
     if (highlighted) this._drawHandler.draw(highlighted);
+
+    path.forEach((component) => {
+      this._drawHandler.draw(component, "#38e038");
+    })
   }
 
   drawBackground() {
