@@ -222,6 +222,7 @@ export class Visualizer {
   deleteAllComponents() {
     this._nodes = new Array();
     this._lines = new Array();
+    this._algoPath = new Array();
     this._algorithmInput.delete("start");
     this._algorithmInput.delete("end");
     this.removeClickedComponent();
