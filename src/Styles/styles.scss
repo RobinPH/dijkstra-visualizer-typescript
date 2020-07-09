@@ -186,3 +186,11 @@ input[type=text] {
 #algo-result {
   display: none;
 }
+
+.deleteAll {
+  margin: 10px 30px;
+  button {
+    @include btn(244, 50, 50);
+    width: 100%;
+  }
+}

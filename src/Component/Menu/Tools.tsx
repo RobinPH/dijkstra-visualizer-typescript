@@ -35,11 +35,16 @@ export class Tools extends React.Component<ToolsProps> {
 
   render() {
     return (
-      <div className="tools">
-        <button type="button" onClick={ this.buttonClick }>Drag</button>
-        <button type="button" onClick={ this.buttonClick } className="disabled">Connect</button>
-        <button type="button" onClick={ this.buttonClick } className="disabled">Delete</button>
-      </div>
+      <>
+        <div className="tools">
+          <button type="button" onClick={ this.buttonClick }>Drag</button>
+          <button type="button" onClick={ this.buttonClick } className="disabled">Connect</button>
+          <button type="button" onClick={ this.buttonClick } className="disabled">Delete</button>
+        </div>
+        <div className="deleteAll">
+          <button type="button" onClick={ () => this.props.visualizer.deleteAllComponents() }>Delete All</button>
+        </div>
+      </>
     )
   }
 }

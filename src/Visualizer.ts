@@ -197,6 +197,14 @@ export class Visualizer {
     this.draw();
   }
 
+  deleteAllComponents() {
+    this._nodes = new Array();
+    this._lines = new Array();
+    
+    this.removeClickedComponent();
+    this.draw();
+  }
+
   get highlightedComponent() {
     return this._highlightedComponent;
   }

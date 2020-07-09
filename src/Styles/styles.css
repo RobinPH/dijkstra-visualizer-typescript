@@ -223,4 +223,45 @@ input[type=text]:focus {
 #algo-result {
   display: none;
 }
+
+.deleteAll {
+  margin: 10px 30px;
+}
+
+.deleteAll button {
+  font-weight: bold;
+  border: none;
+  -webkit-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+  border-radius: 2px;
+  background-color: #f43232;
+  color: #eeeeee;
+  text-shadow: 1px 1px #FFFFFF33;
+  -webkit-box-shadow: 1px 1px 5px 1px rgba(244, 50, 50, 0.5);
+          box-shadow: 1px 1px 5px 1px rgba(244, 50, 50, 0.5);
+  -webkit-transition: all 0.5s ease-in-out;
+  transition: all 0.5s ease-in-out;
+  margin: auto;
+  padding: 10px;
+  width: 100%;
+}
+
+.deleteAll button:hover {
+  background-color: #f43232 !important;
+  cursor: pointer;
+  -webkit-transform: translateY(-3px) scale(1.02);
+          transform: translateY(-3px) scale(1.02);
+  -webkit-box-shadow: 1px 1px 5px 1px rgba(244, 50, 50, 0.7);
+          box-shadow: 1px 1px 5px 1px rgba(244, 50, 50, 0.7);
+}
+
+.deleteAll button:focus {
+  outline: none;
+}
+
+.deleteAll button.disabled {
+  background-color: lightgray;
+  -webkit-box-shadow: 1px 1px 5px 1px rgba(211, 211, 211, 0.7);
+          box-shadow: 1px 1px 5px 1px rgba(211, 211, 211, 0.7);
+}
 /*# sourceMappingURL=styles.css.map */
