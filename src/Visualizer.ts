@@ -197,7 +197,7 @@ export class Visualizer {
         node.path = true;
         this._algoPath.push(node)
         if (prevNode != null) {
-          const line = prevNode.childrens.get(node)!;
+          const line = prevNode.childrens.get(node) || node.childrens.get(prevNode)!;
           line.path = true;
           this._algoPath.push(line);
         }
@@ -257,7 +257,7 @@ export class Visualizer {
   }
 
   get components() {
-    return [...this.lines, ...this.nodes];
+    return [...this.lines, ...this.nodes, ...this._algoPath];
   }
 
   get editMode() {
