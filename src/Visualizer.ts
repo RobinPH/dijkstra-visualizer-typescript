@@ -74,6 +74,7 @@ export class Visualizer {
     this._clickedComponent = null;
     this.highlightedComponent = null;
     this._propertyEditor.render();
+    this._menu.render();
 
     if (this._algorithmInput.get("start") == node) this._algorithmInput.delete("start");
     if (this._algorithmInput.get("end") == node) this._algorithmInput.delete("end");
@@ -119,6 +120,7 @@ export class Visualizer {
     this._clickedComponent = null;
     this.highlightedComponent = null;
     this._propertyEditor.render();
+    this._menu.render();
     this.draw();
   }
 
