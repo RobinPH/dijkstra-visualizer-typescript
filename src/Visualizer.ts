@@ -82,14 +82,14 @@ export class Visualizer {
     this.draw();
   }
 
-  addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption) {
+  addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption, weighted: boolean = this.weighted) {
     let line: Line | null = null;
     if (!origin.hasConnectionTo(destination)) {
       
       if (direction == AlgoOption.BIDIRECTIONAL) {
-        destination.addChildren(origin, weight, direction);
+        destination.addChildren(origin, weight, direction, weighted);
       }
-      line = origin.addChildren(destination, weight, direction);
+      line = origin.addChildren(destination, weight, direction, weighted);
       this.lines.push(line);
     }
     

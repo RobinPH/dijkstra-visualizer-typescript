@@ -6,10 +6,10 @@ export class Line extends Component {
   private origin: Node;
   private destination: Node;
   private _weight: number;
-  private _weighted: Boolean = true;
+  private _weighted: boolean = true;
   private _direction: AlgoOption;
 
-  constructor(origin: Node, destination: Node, weight: number, direction: AlgoOption) {
+  constructor(origin: Node, destination: Node, weight: number, direction: AlgoOption, weighted: boolean) {
     super(origin.position.x,
           origin.position.y,
           `${ origin.name } -> ${ destination.name }`);
@@ -18,6 +18,7 @@ export class Line extends Component {
     this.destination = destination;
     this._weight = weight;
     this._direction = direction;
+    this._weighted = weighted;
   }
 
   set weight(weight: number) {
@@ -49,7 +50,7 @@ export class Line extends Component {
     this._direction = d;
   }
 
-  set weighted(b: Boolean) {
+  set weighted(b: boolean) {
     this._weighted = b;
   }
 }

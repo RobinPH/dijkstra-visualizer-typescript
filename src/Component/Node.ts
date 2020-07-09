@@ -16,8 +16,8 @@ export class Node extends Component {
     return this._childerns.has(children) || children.childrens.has(this);
   }
 
-  addChildren(children: Node, weight: number, direction: AlgoOption) {
-    const line = new Line(this, children, weight, direction);
+  addChildren(children: Node, weight: number, direction: AlgoOption, weighted: boolean) {
+    const line = new Line(this, children, weight, direction, weighted);
     this._childerns.set(children, line);
     return line;
   }
