@@ -34,7 +34,7 @@ export class Visualizer {
   private _menu: Menu;
   private _currentLineWeight: number = 1;
   private _algorithm: Algorithm = new Dijkstra();
-  private _algorithmOption: AlgoOption = AlgoOption.BIDIRECTIONAL;
+  private _algorithmOption: AlgoOption = AlgoOption.DIRECTIONAL;
   private _algorithmInput: Map<"start" | "end", Node> = new Map();
   private _weighted: boolean = true;
 
@@ -177,7 +177,6 @@ export class Visualizer {
   }
 
   startAlgo() {
-    console.log(this.nodes)
     const start = this._algorithmInput.get("start");
     const end = this._algorithmInput.get("end");
 
