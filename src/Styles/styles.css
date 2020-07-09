@@ -71,7 +71,7 @@ input[type=text]:focus {
   outline: none;
 }
 
-.container, .newNode, .newLine, .nodeEditor, .lineEditor, .weighted {
+.container, .newNode, .newLine, .nodeEditor, .lineEditor, .weighted, #algo-result {
   background-color: white;
   margin: 20px;
   padding: 20px;
@@ -81,20 +81,20 @@ input[type=text]:focus {
   font-size: 14px;
 }
 
-.container .container-name, .newNode .container-name, .newLine .container-name, .nodeEditor .container-name, .lineEditor .container-name, .weighted .container-name {
+.container .container-name, .newNode .container-name, .newLine .container-name, .nodeEditor .container-name, .lineEditor .container-name, .weighted .container-name, #algo-result .container-name {
   font-size: 12px;
   margin-bottom: 5px;
   color: gray;
 }
 
-.container input, .newNode input, .newLine input, .nodeEditor input, .lineEditor input, .weighted input {
+.container input, .newNode input, .newLine input, .nodeEditor input, .lineEditor input, .weighted input, #algo-result input {
   width: 40px;
   margin: 2px 10px;
   padding: 2px 5px;
   text-align: center;
 }
 
-.container button, .newNode button, .newLine button, .nodeEditor button, .lineEditor button, .weighted button {
+.container button, .newNode button, .newLine button, .nodeEditor button, .lineEditor button, .weighted button, #algo-result button {
   width: 100%;
 }
 
@@ -118,6 +118,7 @@ input[type=text]:focus {
 
 .startButton {
   text-align: center;
+  margin-bottom: 20px;
 }
 
 .startButton button {
@@ -217,5 +218,9 @@ input[type=text]:focus {
 
 .weighted .value {
   margin-left: 10px;
+}
+
+#algo-result {
+  display: none;
 }
 /*# sourceMappingURL=styles.css.map */

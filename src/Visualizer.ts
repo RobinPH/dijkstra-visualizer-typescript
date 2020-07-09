@@ -181,13 +181,12 @@ export class Visualizer {
     const end = this._algorithmInput.get("end");
 
     if (start == null || end == null) {
-      (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = "Please provide start, and end node.";
-      return;
+      return "Please provide start, and end node.";
     }
 
     const path = (this._algorithm as Dijkstra).start(start, end).map((node) => node.name);
-    (document.querySelector("#algo-result") as HTMLDivElement).innerHTML = path.length > 0 ? path.join(" -> ") : 'No Solution.';
-    this.draw();
+
+    return path.length > 0 ? path.join(" ➜ ") : 'No Solution.';
   }
 
   changeAlgoInput(what: "start" | "end", node: Node) {

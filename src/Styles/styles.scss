@@ -90,7 +90,7 @@ input[type=text] {
   }
 }
 
-.newNode, .newLine, .nodeEditor, .lineEditor, .weighted {
+.newNode, .newLine, .nodeEditor, .lineEditor, .weighted, #algo-result {
   @extend .container;
 }
 
@@ -112,6 +112,7 @@ input[type=text] {
 
 .startButton {
   text-align: center;
+  margin-bottom: 20px;
   button {
     @include btn(245, 142, 35);
     font-size: 18px;
@@ -180,4 +181,8 @@ input[type=text] {
   .value {
     margin-left: 10px;
   }
+}
+
+#algo-result {
+  display: none;
 }

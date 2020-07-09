@@ -13,13 +13,21 @@ export class Menu {
   constructor(elementId: string, visualizer: Visualizer) {
     this.elementId = elementId;
     this.visualizer = visualizer;
+
+    this.startAlgo = this.startAlgo.bind(this);
+  }
+
+  startAlgo() {
+    const div = document.querySelector("#algo-result") as HTMLDivElement;
+    div.style.display = "block";
+    div.innerText = this.visualizer.startAlgo();
   }
 
   render() {
     render((
     <div className="menu">
       <div className="header">
-        <div className="startButton"><button type="button" onClick={ () => this.visualizer.startAlgo() }>Start Dijkstra</button><div id="algo-result"></div><br /></div>
+        <div className="startButton"><button type="button" onClick={ this.startAlgo }>Start Dijkstra</button><div id="algo-result"></div></div>
         <Tools visualizer={ this.visualizer } />
         <Options visualizer={ this.visualizer } />
       </div>
