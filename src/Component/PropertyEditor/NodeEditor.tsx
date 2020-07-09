@@ -138,13 +138,13 @@ export class NodeEditor extends React.Component<NodeEditorProps, NodeEditorState
         <div className="container-name">Node Edit</div>
         <form>
           <label>Name</label>
-          <input type="text" onChange={ this.nameChange } id="node-name" name="name" value={ name }></input><br />
+          <input type="text" onChange={ this.nameChange } id="node-name" name="name" value={ name } autoComplete="off"></input><br />
           <label>X</label>
-          <input type="text" onChange={ this.xPositionChange } id="node-position-x" name="position-x" value={ x }></input>
+          <input type="text" onChange={ this.xPositionChange } id="node-position-x" name="position-x" value={ x } autoComplete="off"></input>
           <label>Y</label>
-          <input type="text" onChange={ this.yPositionChange } id="node-position-y" name="position-y" value={ y }></input><br />
+          <input type="text" onChange={ this.yPositionChange } id="node-position-y" name="position-y" value={ y } autoComplete="off"></input><br />
           <label>Radius</label>
-          <input type="text" onChange={ this.radiusChange } id="node-radius" name="radius" value={ radius }></input><br />
+          <input type="text" onChange={ this.radiusChange } id="node-radius" name="radius" value={ radius } autoComplete="off"></input><br />
           <br />
           <div className="start-end-container">
             <button type="button" onClick={ this.startEndChange } className="disabled">Start</button>

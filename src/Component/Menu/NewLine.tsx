@@ -55,7 +55,7 @@ export class NewLine extends React.Component<NewLineProps, NewLineState> {
           { this.props.visualizer.weighted ? (
             <> 
               <label>Weight</label>
-              <input type="text" onChange={ this.weightChange } id="line-weight" name="line" value={ weight }></input><br />
+              <input type="text" onChange={ this.weightChange } id="line-weight" name="line" value={ weight }  autoComplete="off"></input><br />
             </>
           ) : (
             <>
