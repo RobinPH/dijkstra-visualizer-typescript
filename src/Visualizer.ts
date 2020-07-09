@@ -177,6 +177,7 @@ export class Visualizer {
   }
 
   startAlgo() {
+    console.log(this.nodes)
     const start = this._algorithmInput.get("start");
     const end = this._algorithmInput.get("end");
 

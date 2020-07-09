@@ -134,6 +134,7 @@ export class ComponentHandler {
           } else {
             this.visualizer.removeClickedComponent();
             this.visualizer.clickComponent(highlightedComponent);
+            this.visualizer.draggingComponent = highlightedComponent;
             highlightedComponent.click(true);
           }
         }
