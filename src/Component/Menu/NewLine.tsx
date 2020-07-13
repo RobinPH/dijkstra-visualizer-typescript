@@ -65,9 +65,9 @@ export class NewLine extends React.Component<NewLineProps, NewLineState> {
         </form>
         <br />
         <form onChange={ this.directionChange }>
-            <input type="radio" id="bidrectional" name="direction" value="bidirectional" defaultChecked />
+            <input type="radio" id="bidrectional" name="direction" value="bidirectional" />
             <label >Bidirectional</label><br />
-            <input type="radio" id="directional" name="direction" value="directional" />
+            <input type="radio" id="directional" name="direction" value="directional" defaultChecked />
             <label >Directional</label><br />
           </form>
       </div>
