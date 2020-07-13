@@ -1,5 +1,6 @@
 import { Algorithm } from "./Algorithm";
 import { Node } from "../Component/Node";
+import { AlgoOption } from "../Visualizer";
 
 export class Dijkstra extends Algorithm {
   constructor() {
@@ -15,8 +16,9 @@ export class Dijkstra extends Algorithm {
       const checkingNode = open.shift();
       closed.push(checkingNode!);
 
-      checkingNode?.childrens.forEach(({ weight }, children) => {
+      checkingNode?.childrens.forEach(({ weight, direction, nodes: { origin } }, children) => {
         if (children == start || closed.includes(children)) return;
+        if (origin === children && direction !== AlgoOption.BIDIRECTIONAL) return;
         const childrenData = map.get(children);
         const checkingNodeDistance = checkingNode == start ? 0 : map.get(checkingNode)!.distance;
         

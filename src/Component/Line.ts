@@ -21,6 +21,12 @@ export class Line extends Component {
     this._weighted = weighted;
   }
 
+  flip() {
+    const oldOrigin = this.origin;
+    this.origin = this.destination;
+    this.destination = oldOrigin;
+  }
+
   set weight(weight: number) {
     this._weight = weight;
   }

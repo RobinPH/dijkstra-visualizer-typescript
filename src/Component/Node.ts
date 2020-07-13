@@ -19,11 +19,13 @@ export class Node extends Component {
   addChildren(children: Node, weight: number, direction: AlgoOption, weighted: boolean) {
     const line = new Line(this, children, weight, direction, weighted);
     this._childerns.set(children, line);
+    children._childerns.set(this, line);
     return line;
   }
 
   removeChildren(children: Node) {
     this.childrens.delete(children);
+    children.childrens.delete(this);
   }
 
   get childrens() {

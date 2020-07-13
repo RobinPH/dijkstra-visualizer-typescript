@@ -85,10 +85,6 @@ export class Visualizer {
   addConnection(origin: Node, destination: Node, weight: number = this._currentLineWeight, direction: AlgoOption = this._algorithmOption, weighted: boolean = this.weighted) {
     let line: Line | null = null;
     if (!origin.hasConnectionTo(destination)) {
-      
-      if (direction == AlgoOption.BIDIRECTIONAL) {
-        destination.addChildren(origin, weight, direction, weighted);
-      }
       line = origin.addChildren(destination, weight, direction, weighted);
       this.lines.push(line);
     }
@@ -128,10 +124,8 @@ export class Visualizer {
     this.removeConnection(origin, destination);
   }
 
-  flipLineDirection({ weight, direction, nodes: { origin, destination } }: Line) {
-    this.removeConnection(origin, destination);
-    const flippedLine = this.addConnection(destination, origin, weight, direction);
-    if (flippedLine != null) this.clickComponent(flippedLine);
+  flipLineDirection(line: Line) {
+    line.flip();
     this.draw();
   }
 
@@ -182,7 +176,6 @@ export class Visualizer {
   startAlgo() {
     const start = this._algorithmInput.get("start");
     const end = this._algorithmInput.get("end");
-    
     this._algoPath.forEach((component) => component.path = false);  
 
     if (start == null || end == null) {
